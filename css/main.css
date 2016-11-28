@@ -4,7 +4,6 @@ body
 {
 	height: 100%;
 	width: 100%;
-	min-width: 520px;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 14px;
 	line-height: 1.42857143;
@@ -18,6 +17,7 @@ form
 	display: block;
 	margin-top: 0em;
 }
+
 .logo
 {
 	vertical-align: middle;
@@ -26,7 +26,10 @@ form
 	margin: 0 auto;
 	display: block;
 }
-
+.form-control
+{
+	min-width: 230px;
+}
 .container
 {
  	padding-right: 15px;
@@ -65,10 +68,11 @@ form
 .guest-button
 {
 	background-color: #8b8b8b;
-	width: 420px;
+	width: 26%;
+	min-width: 129px;
 	margin-right: 0;
 	margin-top: 20px;
-	height: 50px;
+	height: 100%;
 	padding: 10px;
 	font-size: 22px;
 	display: inline-block;
@@ -91,7 +95,8 @@ form
 .register-button
 {
 	background-color: #217db4;
-	width: 420px;
+	width: 26%;
+	min-width: 129px;
 	margin-right: 0;
 	margin-top: 20px;
 	height: 50px;
@@ -157,6 +162,7 @@ form
     .col-m-10 {width: 83.33%;}
     .col-m-11 {width: 91.66%;}
     .col-m-12 {width: 100%;}
+
 }
 
 @media only screen and (min-width: 768px) {
