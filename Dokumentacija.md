@@ -8,7 +8,7 @@ Opis projekta: Naš tim će napraviti web igru u kojoj korisnik nakon registraci
  
 *Korišćenje tehnologija: HTML, CSS
 
-*Korišćenje frameworka: MeteorJS, Bootstrap
+*Korišćenje frameworka: MeteorJS
 
 *Baza podataka: MongoDB
 
