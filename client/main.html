@@ -1,151 +1,157 @@
 
 <template name ="main">
-<div class ="header">
-<img src = "/images/logo.png" class = "logo"/></div>
-{{> yield}}
+  <div class ="header">
+  <img src = "/images/logo.png" class = "logo"/></div>
+  {{> yield}}
 </template>
 
 
 <template name ="home">
-<div class ="container">
-  <div class ="col-md-3 col-sm-2"></div>
-<div class ="col-md-6 col-sm-8 login">
-  <div class ="alt-auth">
-    <button data-type="facebook">
-      <i class="fa fa-facebook"></i>
-    </button>
-    <button data-type="twitter">
-      <i class="fa fa-twitter"></i>
-    </button>
-    <button data-type="google">
-      <i class="fa fa-google"></i>
-    </button>
-  </div>
-  <form id ="login-form">
-    <label>Username or Email</label>
-    <input type ="text" name ="username" value ="Username / Email" class="form-control">
-    <label>Password</label>
-    <input type  ="password" name ="password" value ="Password" class ="form-control">
-    <br>
-    <input type="submit" value ="Login" class ="btn btn-primary">
-    <br>
-    <br>
-    <a href="{{pathFor route='forgot'}}" class="login-link">Forgot password?</a>
-  </form>
+  <div class ="container">
+    <div class ="col-md-3 col-sm-2"></div>
+      <div class ="col-md-6 col-sm-8 login">
+        <div class ="alt-auth">
 
-</div>
-</div>
+          <button data-type="facebook">
+            <i class="fa fa-facebook"></i>
+          </button>
+
+          <button data-type="twitter">
+           <i class="fa fa-twitter"></i>
+          </button>
+
+          <button data-type="google">
+            <i class="fa fa-google"></i>
+          </button>
+
+        </div>
+
+        <form id ="login-form">
+          <label>Username or Email</label>
+          <input type ="text" name ="username" class="form-control" placeholder="Username / Email">
+          <label>Password</label>
+          <input type  ="password" name ="password" class ="form-control" placeholder="Password">
+          <br>
+          <input type="submit" value ="Login" class ="btn btn-primary">
+          <br>
+          <br>
+          <a href="{{pathFor route='forgot'}}" class="login-link">Forgot password?</a>
+        </form>
+
+      </div>
+  </div>
+
   <div class="buttons-fixed">
-     <div class="special">
-     <a href="{{pathFor route='register'}}" class="register-button">
+    <div class="special">
+      <a href="{{pathFor route='register'}}" class="register-button">
       <i class="fa fa-sign-out"></i>
       Register
-    </a>
-    <br>
-    <a href="{{pathFor route='loby'}}" class="guest-button">
+      </a>
+      <br>
+      <a href="{{pathFor route='loby'}}" class="guest-button">
       <i class="fa fa-rocket"></i>
       Play as a Guest
-    </a>
-   </div>
-   </div>
+      </a>
+    </div>
+  </div>
 </template>
 
 <template name ="register">
   <div class ="container">
-  <div class ="col-md-3 col-sm-2"></div>
-<div class ="col-md-6 col-sm-8 login">
-  <div class ="alt-auth">
-    <button data-type="facebook">
-      <i class="fa fa-facebook"></i>
-    </button>
-    <button data-type="twitter">
-      <i class="fa fa-twitter"></i>
-    </button>
-    <button data-type="google">
-      <i class="fa fa-google"></i>
-    </button>
+    <div class ="col-md-3 col-sm-2"></div>
+    <div class ="col-md-6 col-sm-8 login">
+      <div class ="alt-auth">
+        <button data-type="facebook">
+          <i class="fa fa-facebook"></i>
+        </button>
+
+        <button data-type="twitter">
+          <i class="fa fa-twitter"></i>
+        </button>
+
+        <button data-type="google">
+          <i class="fa fa-google"></i>
+        </button>
+
+      </div>
+      <form id ="register-form" class="registerForm">
+        <label>Full Name</label>
+        <input type ="text" name ="fullname" class="form-control">
+        <label>Username</label>
+        <input type  ="text" name ="username" class ="form-control">
+        <label>Email Address</label>
+        <input type  ="email" name ="email" class ="form-control">
+        <label>Password</label>
+        <input type  ="password" name ="password" class ="form-control">
+        <label>Confirm Password</label>
+        <input type  ="password" name ="confirm" class ="form-control">
+        <br>
+        <input type="submit" value ="Register" class ="btn btn-primary">
+        <br>
+        <br>
+        <a href="{{pathFor route='home'}}" class="login-link">Already have an account?</a>
+        <br>
+        <a href="{{pathFor route='forgot'}}" class="login-link">Forgot password?</a>
+      </form>
+    </div>
   </div>
-  <form id ="register-form">
-    <label>Full Name</label>
-    <input type ="text" name ="fullname" class="form-control">
-    <label>Username</label>
-    <input type  ="text" name ="username" class ="form-control">
-    <label>Email Address</label>
-    <input type  ="text" name ="email" class ="form-control">
-    <label>Password</label>
-    <input type  ="password" name ="password" class ="form-control">
-    <label>Confirm Password</label>
-    <input type  ="password" name ="confirm" class ="form-control">
-    <br>
-    <input type="submit" value ="Register" class ="btn btn-primary">
-    <br>
-    <br>
-    <a href="{{pathFor route='home'}}" class="login-link">Already have an account?</a>
-    <br>
-    <a href="{{pathFor route='forgot'}}" class="login-link">Forgot password?</a>
-  </form>
-</div>
-</div>
 </template>
 
 <template name ="forgot">
-<div class ="container">
-  <div class ="col-md-3 col-sm-2"></div>
-<div class ="col-md-6 col-sm-8 login">
-
-  <form id ="forgot-form-one">
-    <label>Email Address</label>
-    <input type ="text" name ="email" class="form-control">
-    <input type  ="hidden" name ="stage" class ="form-control">
-    <br>
-    <input type="submit" value ="Send Reset Code" class ="btn btn-primary">
-    <br>
-    <br>
-  </form>
-  <form id ="forgot-form-two" style="display:none;" action="#">
-    <label>Verification Code</label>
-    <input type ="text" name ="verify" class="form-control">
-    <label>New Password</label>
-    <input type ="password" name ="new-pass" class="form-control">
-    <label>Confirm New Password</label>
-    <input type ="password" name ="confirm-pass" class="form-control">
-    <input type  ="hidden" name ="stage" class ="form-control">
-    <input type  ="hidden" name ="email" class ="form-control">
-    <br>
-    <input type="submit" value ="Rest Password" class ="btn btn-primary">
-    <br>
-    <br>
-  </form>
-</div>
-</div>
+  <div class ="container">
+    <div class ="col-md-3 col-sm-2"></div>
+    <div class ="col-md-6 col-sm-8 login">
+      <form id ="forgot-form-one">
+        <label>Email Address</label>
+        <input type ="text" name ="email" class="form-control">
+        <input type  ="hidden" name ="stage" class ="form-control">
+        <br>
+        <input type="submit" value ="Send Reset Code" class ="btn btn-primary">
+        <br>
+        <br>
+        </form>
+        <form id ="forgot-form-two" style="display:none;" action="#">
+        <label>Verification Code</label>
+        <input type ="text" name ="verify" class="form-control">
+        <label>New Password</label>
+        <input type ="password" name ="new-pass" class="form-control">
+        <label>Confirm New Password</label>
+        <input type ="password" name ="confirm-pass" class="form-control">
+        <input type  ="hidden" name ="stage" class ="form-control">
+        <input type  ="hidden" name ="email" class ="form-control">
+        <br>
+        <input type="submit" value ="Rest Password" class ="btn btn-primary">
+        <br>
+        <br>
+      </form>
+    </div>
+  </div>
 </template>
 
 <template name ="loby">
-<div class ="container">
-<div class="row">
-  <div class="col-sm-4">
-  <div class ="user">
-    <div class ="icon">
-      <img src ="/images/user.png"/>
+  <div class ="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class ="user">
+          <div class ="icon">
+            <img src ="/images/user.png"/>
+          </div>
+          <div class ="info">
+            <p class ="username">Guest</p>
+            <a href="/config" class="btn btn-default btn-sm settings">
+            <i class ="fa fa-cog"></i>
+            </a>
+            <a href="/logout" class ="btn btn-default btn-sm logout">
+            <i class ="fa fa-sign-out"></i>
+            </a>
+          </div>
+        </div>
+        <div class ="buttons">
+        <button class ="btn btn-primary action-create">Create</button>
+        </div>
+        <br>
+      </div>
+      <div class="col-sm-8">.col-sm-8</div>
     </div>
-    <div class ="info">
-      <p class ="username">Guest</p>
-      <a href="/config" class="btn btn-default btn-sm settings">
-        <i class ="fa fa-cog"></i>
-      </a>
-      <a href="/logout" class ="btn btn-default btn-sm logout">
-        <i class ="fa fa-sign-out"></i>
-      </a>
-    </div>
   </div>
-  <div class ="buttons">
-    <button class ="btn btn-primary action-create">Create</button>
-  </div>
-  <br>
-  </div>
-  <div class="col-sm-8">.col-sm-8</div>
-</div>
-</div>
-
-
 </template>
