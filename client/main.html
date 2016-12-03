@@ -12,25 +12,27 @@
       <div class ="col-md-6 col-sm-8 login">
         <div class ="alt-auth">
 
-          <button data-type="facebook">
+          <button class="facebookLogin" data-type="facebook">
             <i class="fa fa-facebook"></i>
           </button>
 
-          <button data-type="twitter">
+          <button class="twitterLogin" data-type="twitter">
            <i class="fa fa-twitter"></i>
           </button>
 
-          <button data-type="google">
+          <button class="googleLogin" data-type="google">
             <i class="fa fa-google"></i>
           </button>
 
         </div>
 
-        <form id ="login-form">
+        <form id ="login-form" class="loginForm">
           <label>Username or Email</label>
-          <input type ="text" name ="username" class="form-control" placeholder="Username / Email">
+          <input type ="text" name ="username" class="form-control" placeholder="Username / Email" required>
           <label>Password</label>
-          <input type  ="password" name ="password" class ="form-control" placeholder="Password">
+          <input type  ="password" name ="password" class ="form-control" placeholder="Password" pattern=".{6,15}" required title="6 characters minimum, 15 characters maximum">
+          <br>
+          <span id="errorLogin"></span>
           <br>
           <input type="submit" value ="Login" class ="btn btn-primary">
           <br>
@@ -75,16 +77,18 @@
 
       </div>
       <form id ="register-form" class="registerForm">
-        <label>Full Name</label>
-        <input type ="text" name ="fullname" class="form-control">
+        <!--<label>Full Name</label>
+        <input type ="text" name ="fullname" class="form-control">-->
         <label>Username</label>
-        <input type  ="text" name ="username" class ="form-control">
+        <input type  ="text" name ="username" class ="form-control" pattern=".{4,15}"   required title="4 characters minimum, 15 characters maximum">
         <label>Email Address</label>
-        <input type  ="email" name ="email" class ="form-control">
+        <input type  ="email" name ="email" class ="form-control" required>
         <label>Password</label>
-        <input type  ="password" name ="password" class ="form-control">
+        <input type  ="password" name ="password" class ="form-control" pattern=".{6,15}" required title="6 characters minimum, 15 characters maximum">
         <label>Confirm Password</label>
-        <input type  ="password" name ="confirm" class ="form-control">
+        <input type  ="password" name ="password_confirm" class ="form-control" pattern=".{6,15}" required title="6 characters minimum, 15 characters maximum">
+        <br>
+        <span id="errorRegister"></span>
         <br>
         <input type="submit" value ="Register" class ="btn btn-primary">
         <br>
