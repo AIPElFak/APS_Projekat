@@ -9,7 +9,7 @@ meteor<br/><br/>
 
 Zatim na tu lokaciju iskopirate nas projekat.<br/>
 Otvorite novi cmd i odite na lokaciju projekta, i tu kucate sledeci niz naredbi radi instaliranja paketa koje smo koristili:<br/>
-meteor add twbs:bootstrap<br/><br/>
+meteor add twbs:bootstrap<br/>
 meteor add iron:router<br/>
 meteor add fortawesome:fontawesome<br/>
 meteor add themeteorchef:bert<br/>
