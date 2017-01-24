@@ -1,6 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 
+import '../imports/api/top_10.js';
+
 Meteor.startup(() => {
 
 	ServiceConfiguration.configurations.upsert({

@@ -1,4 +1,3 @@
-
 <template name ="main">
   <div class ="header">
   <img src = "/images/logo.png" class = "logo"/></div>
@@ -56,6 +55,7 @@
       </a>
     </div>
   </div>
+
 </template>
 
 <template name ="register">
@@ -133,29 +133,247 @@
 </template>
 
 <template name ="loby">
-  <div class ="container">
-    <div class="row">
-      <div class="col-sm-4">
-        <div class ="user">
-          <div class ="icon">
-            <img src ="/images/user.png"/>
+<div class ="container">
+<div class="row">
+  <div class="col-sm-4">
+  <div class ="user">
+    <div class ="icon">
+      <img src ="/images/user.png"/>
+    </div>
+    <div class ="info">
+      <p class ="username">Guest</p>
+      <button class="btn btn-default btn-sm settings" data-toggle="modal" data-target="#configModal">
+        <i class="fa fa-cog"></i>
+      </button>
+
+    <div id="configModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">User Settings</h4>
           </div>
-          <div class ="info">
-            <p class ="username">Guest</p>
-            <a href="/config" class="btn btn-default btn-sm settings">
-            <i class ="fa fa-cog"></i>
-            </a>
-            <a href="/logout" class ="btn btn-default btn-sm logout">
-            <i class ="fa fa-sign-out"></i>
-            </a>
+          <div class="modal-body">
+            <h3>Change Icon</h3>
+          <form class ="form-group">
+            <select class="image-picker">
+              <option data-img-src="/images/y1.png" value="/images/y1.png">1</option>
+              <option data-img-src="/images/y2.png" value="/images/y2.png">2</option>
+              <option data-img-src="/images/y3.png" value="/images/y3.png">3</option>
+              <option data-img-src="/images/y4.png" value="/images/y4.png">4</option>
+              <option data-img-src="/images/d1.jpg" value="/images/d1.png">5</option>
+              <option data-img-src="/images/d2.jpg" value="/images/d2.png">6</option>
+              <option data-img-src="/images/d3.jpg" value="/images/d3.png">7</option>
+              <option data-img-src="/images/d4.jpg" value="/images/d4.png">8</option>
+              <option data-img-src="/images/d5.jpg" value="/images/d5.png">9</option>
+              <option data-img-src="/images/htf1.gif" value="/images/htf1.gif">10</option>
+              <option data-img-src="/images/htf2.gif" value="/images/htf2.gif">11</option>
+              <option data-img-src="/images/htf3.gif" value="/images/htf3.gif">12</option>
+              <option data-img-src="/images/htf4.gif" value="/images/htf4.gif">13</option>
+              <option data-img-src="/images/lt1.jpg" value="/images/lt1.png">14</option>
+              <option data-img-src="/images/lt2.jpg" value="/images/lt2.png">15</option>
+              <option data-img-src="/images/lt3.jpg" value="/images/lt3.png">16</option>
+              <option data-img-src="/images/lt4.jpg" value="/images/lt4.png">17</option>
+              <option data-img-src="/images/s1.jpg" value="/images/s1.jpg">18</option>
+              <option data-img-src="/images/s2.png" value="/images/s2.png">19</option>
+              <option data-img-src="/images/s3.gif" value="/images/s3.gif">20</option>
+              <option data-img-src="/images/dd1.jpg" value="/images/dd1.png">21</option>
+              <option data-img-src="/images/dd2.jpg" value="/images/dd2.png">22</option>
+              <option data-img-src="/images/dd3.jpg" value="/images/dd3.png">23</option>
+              <option data-img-src="/images/dd4.jpg" value="/images/dd4.png">24</option>
+            </select>
+             <input type="submit" value ="Change" class ="btn btn-primary">
+          </form>
+          {{> imagescript}}
+          <h3>Change Password</h3>
+          <form id="change-form">
+            <label>Old Password</label>
+            <input type="password" name="old" class="form-control">
+            <label>New Password</label>
+            <input type="password" name="new" class="form-control">
+            <label>Confirm Password</label>
+            <input type="password" name="conirm" class="form-control">
+            <br>
+            <input type="submit" value="Save" class="btn btn-primary">
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
-        <div class ="buttons">
-        <button class ="btn btn-primary action-create">Create</button>
-        </div>
-        <br>
+
       </div>
-      <div class="col-sm-8">.col-sm-8</div>
+    </div>
+
+
+      <a href="#" class ="btn btn-default btn-sm logout">
+        <i class ="fa fa-sign-out"></i>
+      </a>
     </div>
   </div>
+  <div class ="buttons">
+    <button type="button" class ="btn btn-primary action-create" data-toggle="modal" data-target="#createModal">Create</button>
+
+    <div id="createModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Create Game</h4>
+          </div>
+          <div class="modal-body">
+          <form class ="form-group">
+           <label>Game Name</label>
+           <input type ="text" name="game-name" class="form-control"  placeholder="Game Name">
+           <label>Picture</label>
+            <select class="image-picker">
+              <option data-img-src="/images/room1.png" value="/images/room1.png">1</option>
+              <option data-img-src="/images/room2.png" value="/images/room2.png">2</option>
+              <option data-img-src="/images/room3.png" value="/images/room3.png">3</option>
+              <option data-img-src="/images/room4.png" value="/images/room4.png">4</option>
+              <option data-img-src="/images/room5.png" value="/images/room5.png">5</option>
+              <option data-img-src="/images/room6.png" value="/images/room6.png">6</option>
+            </select>
+             {{> imagescript}}
+           <label>Max Players</label>
+           <input type="number" name="players" min ="2" value="4" max ="8" class ="form-control">
+           <label>Rounds</label>
+           <input type="number" name="rounds" min="1" value="1" max="50" class="form-control">
+           <label>Time Limit</label>
+           <select name="time-limit" class="form-control">
+            <option value ="0.5">0:30</option>
+            <option value ="1">1:00</option>
+            <option value ="1.5">1:30</option>
+            <option valule ="2">2:00</option>
+            <option value ="2.5">2:30</option>
+            <option value ="3">3:00</option>
+           </select>
+           <label>Password</label>
+           <input type ="password" name="password" class="form-control" placeholder="Leave blank for public room">
+           <br>
+           <input type="submit" value ="Create" class ="btn btn-primary">
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <br>
+  </div>
+  <div class="col-sm-8">
+
+        <div class="form-group">
+          <select class="form-control" id="sel1">
+            <option>All</option>
+            <option>Public</option>
+            <option>Private</option>
+          </select>
+        </div>
+  <ul class="list-group">
+
+    <a href ="#" class="roomclick">    
+     <div class="li-group-item">
+      <li class="list-group-item">
+        <img src ="/images/room1.png"/>
+      </li>
+   
+         <span class="room">Room: </span>
+         <span class="name">Groki</span> 
+         <span class="players">Players: </span>
+         <span class="prvideo">1</span>
+         <span class="drugideo">/</span>
+         <span class="trecideo">4</span>
+         <span class="status">Status:</span>
+         <span class="statusname">Private</span>
+
+     </div>
+    </a>
+
+    <a href ="#" class="roomclick">    
+     <div class="li-group-item">
+      <li class="list-group-item">
+        <img src ="/images/room3.png"/>
+      </li>
+   
+         <span class="room">Room: </span>
+         <span class="name">Groki</span> 
+         <span class="players">Players: </span>
+         <span class="prvideo">1</span>
+         <span class="drugideo">/</span>
+         <span class="trecideo">4</span>
+         <span class="status">Status:</span>
+         <span class="statusname">Private</span>
+
+     </div>
+    </a>
+
+    <a href ="#" class="roomclick">    
+     <div class="li-group-item">
+      <li class="list-group-item">
+        <img src ="/images/room2.png"/>
+      </li>
+   
+         <span class="room">Room: </span>
+         <span class="name">Groki</span> 
+         <span class="players">Players: </span>
+         <span class="prvideo">1</span>
+         <span class="drugideo">/</span>
+         <span class="trecideo">4</span>
+         <span class="status">Status:</span>
+         <span class="statusname">Private</span>
+
+     </div>
+    </a>
+
+  </ul>
+
+    
+
+  </div>
+   <div class="col-sm-4">
+      <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Leaderboard</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    	{{#each topUsers}}
+    		{{> topUser}}
+    	{{/each}}
+      
+    </tbody>
+  </table>
+   </div>
+</div>
+</div>
+
+</template>
+
+<template name="topUser">
+
+	<tr>
+		<td class="top{{_id}}">{{_id}}</td>
+		<td class="top{{_id}}"><i class="fa fa-trophy" id="top{{_id}}"></i> {{username}}</td>
+		<td class="top{{_id}}">{{points}}</td>
+	</tr>
+
+</template>
+
+<!--Videti sta i kako prebaciti ovo i srediti -->
+<template name="imagescript">
+  <script type="text/javascript">
+  $("select.image-picker").imagepicker({});
+  </script>
 </template>

@@ -1,18 +1,47 @@
-/*TREAB DA SE nAPRAVI AKO JE VEC LOGOVAN DA NE MOZE DA ODE NA POCETNU STRANU NEGO DA GA UBACUJE ODMAH U LOBY I DA MU SE STAVI NEKO OGRANICENJE NA SESIJU AKO NISTA NE PRETISKA*/
-
 import { Template } from 'meteor/templating';
+
+import { TopTen } from '../imports/api/top_10.js';
+
 import { ReactiveVar } from 'meteor/reactive-var';
 
 
 import './main.html';
 
+
+var currentUser = Meteor.userId();
+
 Router.route('/register',{
-	name: 'register'
+	name: 'register',
+	template: 'register',
+
+
+	onBeforeAction: function(){
+        var currentUser = Meteor.userId();
+        if(!currentUser){
+           // this.next();
+           // alert("Logovan");
+            this.next();
+        } else {
+            Router.go('loby');
+        }
+    }
 });
 
 Router.route('/', {
 	name: 'home',
-	template: 'home'
+	template: 'home',
+
+
+	onBeforeAction: function(){
+        var currentUser = Meteor.userId();
+        if(!currentUser){
+           // this.next();
+           // alert("Logovan");
+            this.next();
+        } else {
+            Router.go('loby');
+        }
+    }
 });
 Router.configure({
 	layoutTemplate: 'main'
@@ -21,8 +50,22 @@ Router.route('/forgot',{
   name: 'forgot'
 });
 Router.route('/loby',{
-	name: 'loby'
-});
+	name: 'loby',
+	template: 'loby',
+
+	onBeforeAction: function(){
+        var currentUser = Meteor.userId();
+        if(currentUser){
+           // this.next();
+           // alert("Logovan");
+            this.next();
+        } else {
+            Router.go('home');
+        }
+    }
+})
+
+	$("select.image-picker").imagepicker({});
 
 if(Meteor.isClient)
 {
@@ -45,13 +88,19 @@ if(Meteor.isClient)
 	        var email = event.target.email.value;
 	        var password = event.target.password.value;
 	        var password_confirm = event.target.password_confirm.value;
+	        var points = 0;
 
 	        if(password == password_confirm)
 	        {
 		        Accounts.createUser({
 		        	username: username,
 		            email: email,
+		            profile: {
+				        points: points,
+				        avatar: "/images/user.png"
+				    },
 		            password: password
+		            
 		        }, function(error){
 					    // code goes here    
 					    if(error){
@@ -64,7 +113,7 @@ if(Meteor.isClient)
 					    	Router.go('home');
 					    }
 				});
-	        	//Router.go('loby');   
+	        	//Router.go('loby');
 	       	}
 
 	       	else
@@ -142,6 +191,89 @@ if(Meteor.isClient)
 			  }
 			});
 	    }
+	});
+
+	Template.loby.events({
+		'click .logout': function(event){
+	    	Meteor.logout();
+	    	Router.go('home');
+	    	//location.reload(); 
+	    }
+	});
+
+	//promenjive koja pamti da li je user regsitrovan ili ne
+	Template.loby.helpers({
+		user_id: function(){
+			var user_login;
+			if(Meteor.userId())
+			{
+				user_login = true;
+			}
+
+			else
+			{
+				user_login = false;
+			}
+
+			return user_login;
+		},
+
+		topUsers: function(){
+			
+			return TopTen.find();
+		}
+		
+	});
+
+	Template.home.helpers({
+		user_id: function(){
+			var user_login;
+			if(Meteor.userId())
+			{
+				user_login = true;
+			}
+
+			else
+			{
+				user_login = false;
+			}
+
+			return user_login;
+		}
+	});
+
+	Template.register.helpers({
+		user_id: function(){
+			var user_login;
+			if(Meteor.userId())
+			{
+				user_login = true;
+			}
+
+			else
+			{
+				user_login = false;
+			}
+
+			return user_login;
+		}
+	});
+
+	Template.forgot.helpers({
+		user_id: function(){
+			var user_login;
+			if(Meteor.userId())
+			{
+				user_login = true;
+			}
+
+			else
+			{
+				user_login = false;
+			}
+
+			return user_login;
+		}
 	});
 }
 
