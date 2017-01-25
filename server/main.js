@@ -1,7 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 
-import '../imports/api/top_10.js';
+/*import '../imports/api/top_10.js';
+
+import '../imports/api/rooms.js';*/
+
+Posts = new Mongo.Collection('top_10');
+Comments = new Mongo.Collection('rooms');
 
 Meteor.startup(() => {
 

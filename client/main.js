@@ -1,14 +1,55 @@
 import { Template } from 'meteor/templating';
 
-import { TopTen } from '../imports/api/top_10.js';
+/*import { TopTen } from '../imports/api/top_10.js';
+
+import { Rooms } from '../imports/api/rooms.js';*/
+
+TopTen = new Mongo.Collection('top_10');
+Rooms = new Mongo.Collection('rooms');
 
 import { ReactiveVar } from 'meteor/reactive-var';
 
 
 import './main.html';
 
+var tipSobe = "All";
+var returnRooms = Rooms.find({gameStatus: "0"});
 
-var currentUser = Meteor.userId();
+Meteor.startup(function () {
+
+    sAlert.config({
+        effect: '',
+        position: 'top-right',
+        timeout: 5000,
+        html: false,
+        onRouteClose: true,
+        stack: true,
+        // or you can pass an object:
+        // stack: {
+        //     spacing: 10 // in px
+        //     limit: 3 // when fourth alert appears all previous ones are cleared
+        // }
+        offset: 0, // in px - will be added to first alert (bottom or top - depends of the position in config)
+        beep: false,
+        // examples:
+        // beep: '/beep.mp3'  // or you can pass an object:
+        // beep: {
+        //     info: '/beep-info.mp3',
+        //     error: '/beep-error.mp3',
+        //     success: '/beep-success.mp3',
+        //     warning: '/beep-warning.mp3'
+        // }
+        onClose: _.noop //
+        // examples:
+        // onClose: function() {
+        //     /* Code here will be executed once the alert closes. */
+        // }
+    });
+
+});
+
+
+//var currentUser = Meteor.userId();
 
 Router.route('/register',{
 	name: 'register',
@@ -22,6 +63,7 @@ Router.route('/register',{
            // alert("Logovan");
             this.next();
         } else {
+
             Router.go('loby');
         }
     }
@@ -73,7 +115,6 @@ if(Meteor.isClient)
 	console.log(Meteor.userId());*/
 	console.log(Meteor.userId());
 
-
 	//Froma za registraciju
 	Template.register.events({
 		//zabranjujem space karaktere
@@ -110,6 +151,7 @@ if(Meteor.isClient)
 
 					    else
 					    {
+					    	Meteor.logout();
 					    	Router.go('home');
 					    }
 				});
@@ -198,7 +240,122 @@ if(Meteor.isClient)
 	    	Meteor.logout();
 	    	Router.go('home');
 	    	//location.reload(); 
+	    },
+
+	    'click .changeAvatar': function(event){
+	    	var avatar_tmp = $(".selectAvatar").val();
+	    	Meteor.users.update(Meteor.userId(), {$set: {profile: {avatar: avatar_tmp}}});
+	    },
+
+	    'click .savePassword': function(event){
+
+	    	var oldPassword = $("#oldPassword").val();
+	    	var newPassword = $("#newPassword").val();
+	    	var confirmNewPassword = $("#confirmNewPassword").val();
+
+	    	if( (oldPassword.length >= 6 && oldPassword.length <= 15) && (newPassword.length >= 6 && newPassword.length <= 15) )
+	    	{
+
+		    	if(newPassword == confirmNewPassword)
+		    	{
+		    		Accounts.changePassword(oldPassword, newPassword, function(error){
+
+					    if(error)
+					    {
+
+							sAlert.error(error.reason, {timeout: 2000, position: 'top'});
+					       //$(".changePasswordForm").html("<div class='alert alert-success'><strong>ASDSAD</strong></div>");
+					    } 
+
+					    else
+					    {
+					    	sAlert.success('Change password successfuly', {timeout: 2000, position: 'top'});
+					    	$("#oldPassword").val("");
+					    	$("#newPassword").val("");
+					    	$("#confirmNewPassword").val("");
+					    }
+				    
+					});
+		    	}
+
+		    	else
+		    	{
+		    		//ne podudaraju se sifre
+		    		sAlert.error('Password mismatch', {timeout: 2000, position: 'top'});
+		    	}
+		    }
+		    else
+		    {
+		    	sAlert.error('Password must be between 6 and 15 characters', {timeout: 2000, position: 'top'});
+		    	//previse karaktera
+		    }
+	    	
+	    },
+
+	    'submit .createRoom': function(event){
+	    	var roomName = $(".roomName").val();
+	    	var roomImage = $(".roomImage").val();
+	    	var maxPlayer = $(".maxPlayer").val();
+	    	var numberRounds = $(".numberRounds").val();
+	    	var timeRound = $(".timeRound").val();
+	    	var passwordRoom = $(".passwordRoom").val();
+
+	    	//gameStatus oznacava da li je igra pocela ili ne 0-igra nije statovana 1-igra startovana
+
+	    	//roomType oznacava da li je soma private ili publuc, false-public, true-private
+
+	    	if(passwordRoom.length > 0)
+	    	{
+	    		Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], gameStatus: "0", roomType: true });
+	    	}
+
+	    	else
+	    	{
+	    		Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], gameStatus: "0", roomType: false });
+	    	}
+	    },
+
+	    'change #sel1': function(event){
+
+	    	var tipSobe = $("#sel1").val();
+
+
+	    	if(tipSobe == "All")
+	    	{
+	    		returnRooms = Rooms.find({gameStatus: "0"}).fetch();
+	    	}
+
+	    	else if(tipSobe == "Private")
+	    	{
+	    		returnRooms = Rooms.find({gameStatus: "0", roomType: true}).fetch();
+	    	}
+
+	    	else
+	    	{
+	    		returnRooms = Rooms.find({gameStatus: "0", roomType: false}).fetch();
+	    	}
+
+	    	//alert(returnRooms.length);
+
+	    	$(".listaSoba").html("");
+
+	    	returnRooms.forEach(function(myDoc) {
+	    		var roomType_tmp;
+
+		    	if(myDoc.roomType)
+	    		{
+	    			roomType_tmp = "Private";
+	    		}
+
+	    		else
+	    		{
+	    			roomType_tmp = "Public";
+	    		}
+	    		$(".listaSoba").append("<a href ='#' class='roomclick'><div class='li-group-item'><li class='list-group-item'><img src ='"+myDoc.image+"'/></li><span class='room'>Room: </span><span class='name'>"+myDoc.name+"</span> <span class='players'>Players: </span><span class='prvideo'>"+myDoc.player_ids.length+"</span><span class='drugideo'>/</span><span class='trecideo'>"+myDoc.maxPlayer+"</span><span class='status'>Status:</span><span class='statusname'>"+roomType_tmp+"</span></div></a>");
+	    	});
 	    }
+
+
 	});
 
 	//promenjive koja pamti da li je user regsitrovan ili ne
@@ -221,7 +378,22 @@ if(Meteor.isClient)
 		topUsers: function(){
 			
 			return TopTen.find();
+		},
+
+		playerUsername: function(){
+	    	var user_tmp = Meteor.users.findOne({_id: Meteor.userId()});
+			return user_tmp && user_tmp.username;
+		},
+
+		playerAvatar: function(){
+			var user_tmp = Meteor.users.findOne({_id: Meteor.userId()});
+			return user_tmp && user_tmp.profile.avatar;
+		},
+
+		rooms: function(){
+			return returnRooms
 		}
+
 		
 	});
 
