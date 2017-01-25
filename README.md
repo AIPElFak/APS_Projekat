@@ -19,3 +19,4 @@ meteor add accounts-google<br/>
 meteor add accounts-twitter<br/>
 meteor add service-configuration<br/>
 meteor add accounts-password<br/>
+ meteor add themeteorchef:bert<br/>
