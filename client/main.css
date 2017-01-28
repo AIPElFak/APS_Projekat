@@ -359,6 +359,96 @@ ul.thumbnails.image_picker_selector li .thumbnail.selected
 	font-family: "Roboto";
 	padding-bottom: 5px;
 }
+.okvir
+{
+	height: 400px;
+	width: 100%;
+}
+.okvir
+{
+	height: 400px;
+	width: 100%;
+	
+}
+.draw
+{
+	height: 400px;
+	width: 80%;
+	background-color: rgba(255, 255, 255, 1);
+	display: inline-block;
+	border-radius: 4px;
+}
+.menu
+{
+	height: 400px;
+	width: 16%;
+	display: inline-block;
+	float: right;
+	
+}
+.buttonstart
+{
+	float: right;
+	align-content: center;
+}
+.guess
+{
+	height: 400px;
+	width: 100%;
+	 
+}
+.chat
+{
+	margin-top: 5px;
+	height: 150px;
+	width: 100%;
+	
+}
+.info
+{
+	margin-left: 20px;
+}
+.penblue
+{
+	height: 150px;
+	width: 50px;
+}
+.paleta
+{
+	margin-left: -22px;
+}
+.olovke
+{
+	height: 50px;
+	width: 25px;
+}
+.well
+{
+	background-color: rgba(245, 245, 245, 0.7);
+}
+.promeni
+{
+	height: 250px;
+}
+.draw:hover
+{
+	cursor: url(room/blue.png), auto;
+}
+.message-bubble 
+{
+    padding: 10px 0px 10px 0px;
+}
+
+.message-bubble:nth-child(even) { background-color: #F5F5F5; }
+
+.message-bubble > *
+{
+    padding-left: 10px;    
+}
+
+.panel-body { padding: 0px; }
+
+.panel-heading { background-color: #3d6da7 !important; color: white !important; }
 table th
 {
 	background-color: #337ab7;
@@ -366,6 +456,101 @@ table th
 	font-family: "Roboto";
 	color: #fff;
 }
+
+
+
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.timer
+{
+	margin-right: 17px;
+}
+.data-progress {
+  box-sizing: border-box;
+  position: relative;
+  height: 100px;
+  width: 100px;
+  background: beige;
+  border-radius: 50%;
+  box-shadow: inset 0px 0px 0px 20px green;
+  transition: all 1s;
+  overflow: hidden;
+
+}
+.counter {
+  position: absolute;
+  height: 50%;
+  width: 50%;
+  top: 0%;
+  left: 0%;
+  text-align: center;
+  line-height: 200px;
+  border-radius: 50%;
+  background: transparent;
+  z-index: 4;
+}
+
+.data-progress > div
+{
+  position: absolute;
+  height: 50%;
+  width: 50%;
+  background: inherit;
+  border-radius: 0%;
+}
+
+
+.quad1,
+.quad2 {
+  left: 50%;
+  transform-origin: left bottom;
+}
+.quad3,
+.quad4 {
+  left: 0%;
+  transform-origin: right top;
+}
+.quad1,
+.quad4 {
+  top: 0%;
+}
+.quad2,
+.quad3 {
+  top: 50%;
+}
+.quad1,
+.quad3 {
+  transform: skew(0deg); /* invisible at -90deg */
+}
+.quad2,
+.quad4 {
+  transform: skewY(0deg); /* invisible at 90deg */
+}
+
+/* Just for demo */
+
+div[data-progress] {
+  margin: 40px auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @media only screen and (min-width: 600px) {
     /* For tablets: */
     .col-m-1 {width: 8.33%;}

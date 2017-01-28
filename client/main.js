@@ -12,6 +12,13 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
+//biram vreme
+
+
+//definisem stream
+const streamer = new Meteor.Streamer('chat');
+
+
 var tipSobe = "All";
 var returnRooms = Rooms.find({gameStatus: "0"});
 
@@ -68,6 +75,24 @@ Router.route('/register',{
         }
     }
 });
+Router.route('/guess',{
+	name: 'guess',
+	template: 'guess',
+
+
+	onBeforeAction: function(){
+        var currentUser = Meteor.userId();
+        if(currentUser){
+           // this.next();
+           // alert("Logovan");
+            this.next();
+        } else {
+
+            Router.go('home');
+        }
+    }
+});
+
 
 Router.route('/', {
 	name: 'home',
@@ -105,7 +130,7 @@ Router.route('/loby',{
             Router.go('home');
         }
     }
-})
+});
 
 	$("select.image-picker").imagepicker({});
 
@@ -447,9 +472,118 @@ if(Meteor.isClient)
 			return user_login;
 		}
 	});
+
+	Template.guess.helpers({
+
+		chatsend: function(message) {
+    streamer.emit('message', message);
+    console.log('me: ' + message);
+  }
+	});
+
+	 sendMessage = function(message) {
+    streamer.emit('message', message);
+    console.log('me: ' + message);
+  };
+
+  streamer.on('message', function(message) {
+    console.log('user: ' + message);
+  });
+
 }
+
+
+var maxcounter = 10;
+var firstquad = maxcounter/4;
+var secnd =maxcounter/2;
+var thirdquad = (maxcounter*3)/4;
+
+var countdown = new ReactiveCountdown(maxcounter,
+
+	{
+			//posle svakog tika radi nesto
+		tick: function() 
+		{
+
+				crtanje();
+		},	
+
+	});
+
+crtanje = function(){
+
+	var progressbar = document.querySelector('div[data-progress]'),
+	quad1 = document.querySelector('.quad1'),
+	quad2 = document.querySelector('.quad2'),
+	quad3 = document.querySelector('.quad3'),
+	quad4 = document.querySelector('.quad4'),
+
+			progress = progressbar.getAttribute('data-progress'); //uzimam trenutnu vrednost
+			progress++;
+			progressbar.setAttribute('data-progress',progress);
+			setPie(progress);
+		  function setPie(progress) {
+	//prva cetvrtina
+	if (progress <= firstquad) {
+	  quad1.setAttribute('style', 'transform: skew(' + progress * (-90 / firstquad) + 'deg)'); //iscrtava prvi luk
+	}
+
+	//izmedju prve i druge, pravi drugu cetvrtinu
+	else if (progress > firstquad && progress <= secnd) {
+	  quad1.setAttribute('style', 'transform: skew(-90deg)'); // krije prvi luk
+	  quad2.setAttribute('style', 'transform: skewY(' + (progress - firstquad) * (90 / firstquad) + 'deg)'); //iscrtava drugi luk
+	  progressbar.setAttribute('style', 'box-shadow: inset 0px 0px 0px 20px yellow'); 
+	}
+
+	//izmedju druge i trece, pravi trecu cetvrtinu
+	else if (progress > secnd && progress <= thirdquad) {
+	  quad1.setAttribute('style', 'transform: skew(-90deg)'); // krije prvi luk
+	  quad2.setAttribute('style', 'transform: skewY(90deg)'); // krije drugi luk
+	  quad3.setAttribute('style', 'transform: skew(' + (progress - secnd) * (-90 / firstquad) + 'deg)'); // iscrtava treci
+	  progressbar.setAttribute('style', 'box-shadow: inset 0px 0px 0px 20px orange');
+	}
+
+	//izmedju trece i cetvrte, pravi cetvrtu cetvrtinu
+	else if (progress > thirdquad && progress <= maxcounter) {
+	  quad1.setAttribute('style', 'transform: skew(-90deg)'); // krije prvi luk
+	  quad2.setAttribute('style', 'transform: skewY(90deg)'); // krije drugi luk
+	  quad3.setAttribute('style', 'transform: skew(-90deg)'); // krije treci luk
+	  quad4.setAttribute('style', 'transform: skewY(' + (progress - thirdquad) * (90 / firstquad) + 'deg)'); //iscrtava cetvrti
+	  progressbar.setAttribute('style', 'box-shadow: inset 0px 0px 0px 20px red');
+	}
+	}
+
+
+};
+
+Template.guess.helpers({
+
+	getCountdown: function()
+	{
+		return countdown.get();
+	}
+});
+
+Template.guess.events({
+
+	'click #start': function(event){
+
+		countdown.start(function() {
+
+    // radi nesto kad se zavrsi
+    		clearInterval();
+		});
+
+
+
+	}
+
+
+});
 
 if(Meteor.isServer)
 {
-
+	 streamer.allowRead('all');
+  streamer.allowWrite('all');
 }
+
