@@ -204,7 +204,7 @@
           </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button id="test" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
 
@@ -355,9 +355,134 @@
 
 
 <template name="guess">
+ <div class="col-sm-2">
+ <div class="well">
+ <div class="allusers">
+
+  <div class="userguess">
+        <div class="pictureguess">
+        <img src ="/images/dd1.jpg" class="img-circle">
+        </div>
+          <div class="infoguess">
+          <span class="room">User: </span>
+         <span class="name">Jovan</span> <br>
+        <span class="players">Points: </span>
+         <span class="prvideo">0</span> 
+        </div>
+</div>
+
+
+  <div class="userguess">
+        <div class="pictureguess">
+        <img src ="/images/dd2.jpg" class="img-circle">
+        </div>
+          <div class="infoguess">
+          <span class="room">User: </span>
+         <span class="name">Jovan</span> <br>
+        <span class="players">Points: </span>
+         <span class="prvideo">0</span> 
+        </div>
+</div>
+
+  <div class="userguess">
+        <div class="pictureguess">
+        <img src ="/images/dd3.jpg" class="img-circle">
+        </div>
+          <div class="infoguess">
+          <span class="room">User: </span>
+         <span class="name">Jovan</span> <br>
+        <span class="players">Points: </span>
+         <span class="prvideo">0</span> 
+        </div>
+</div>
+
+  <div class="userguess">
+        <div class="pictureguess">
+        <img src ="/images/dd4.jpg" class="img-circle">
+        </div>
+          <div class="infoguess">
+          <span class="room">User: </span>
+         <span class="name">Jovan</span> <br>
+        <span class="players">Points: </span>
+         <span class="prvideo">0</span> 
+        </div>
+</div>
+
+  <div class="userguess">
+        <div class="pictureguess">
+        <img src ="/images/y1.png" class="img-circle">
+        </div>
+          <div class="infoguess">
+          <span class="room">User: </span>
+         <span class="name">Jovan</span> <br>
+        <span class="players">Points: </span>
+         <span class="prvideo">0</span> 
+        </div>
+</div>
+
+  <div class="userguess">
+        <div class="pictureguess">
+        <img src ="/images/y2.png" class="img-circle">
+        </div>
+          <div class="infoguess">
+          <span class="room">User: </span>
+         <span class="name">Jovan</span> <br>
+        <span class="players">Points: </span>
+         <span class="prvideo">0</span> 
+        </div>
+</div>
+
+  <div class="userguess">
+        <div class="pictureguess">
+        <img src ="/images/y3.png" class="img-circle">
+        </div>
+          <div class="infoguess">
+          <span class="room">User: </span>
+         <span class="name">Jovan</span> <br>
+        <span class="players">Points: </span>
+         <span class="prvideo">0</span> 
+        </div>
+</div>
+
+  <div class="userguess">
+        <div class="pictureguess">
+        <img src ="/images/y4.png" class="img-circle">
+        </div>
+          <div class="infoguess">
+          <span class="room">User: </span>
+         <span class="name">Jovan</span> <br>
+        <span class="players">Points: </span>
+         <span class="prvideo">0</span> 
+        </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ </div>
+ </div>
+ </div>
 <div class ="container">
 <div class="row">
- 
+
    <div class="col-sm-10">
    <div class="okvir">
    <div class="well">
@@ -370,20 +495,25 @@
   <div class="quad2"></div>
   <div class="quad3"></div>
   <div class="quad4"></div>
-
+<div class='counter'>{{getCountdown}}</div>
 </div>
    </div>
   
-   <div class="info">
+   <div class="infoguessu">
    <p class ="username">Guest</p>
    </div>
   <br>
    <br>
    <br>
-   <br>
+   
    <div class="paleta">
    <a href="#" class="penblue"><img class="olovke" src = "/room/blue.png"/></a>
-
+   <a href="#" id="penred"><img class="olovke" src = "/room/red.png"/></a>
+   <a href="#" class="penyellow"><img class="olovke" src = "/room/yellow.png"/></a>
+   <a href="#" class="pengreen"><img class="olovke" src = "/room/green.png"/></a>
+    <a href="#" class="penblack"><img class="olovke" src = "/room/black.png"/></a>
+       <a href="#" class="eraser"><img class="olovke1" src = "/room/eraser.png"/></a>
+  
    </div>
  <br>
    <div class ="buttonstart">
@@ -396,14 +526,51 @@
    
 
   <div class="col-sm-2">
-  <div class="well">
+  
     <div class="guess">
-
+    <div class="panel panel-default">
+    <div class="panel-heading">Guess</div>
+    <div class="panel-body">
+    <div class="log">
+    <div class="rowmessage-bubble">
+    <p class="text-muted"></p>
+    <span></span>
+    </div>
+    </div>
+    <div class="panel-footer">
+    <input type="text" class="inputzaguess" id="sendMessage">
+    <button type="button" class="btn btn-primary">Guess</button>
+    </div>
     </div>
     </div>
   </div>
-  <div class="col-sm-10">
+  <br>
+ <br>
+  <br>
+   <br>
 
+     </div>
+       <div class="col-sm-10">
+     <div class="chat">
+      <div class ="panel panel-default">
+      <div class="panel-heading">Chat</div>
+      <div class="panel-body">
+      <div class="chatlog">
+      <div class="row message-bubble">
+      <p class="text-muted"></p>
+      <span></span>
+      </div>
+      </div>
+      <div class="panel-footer">
+      <div class="input-group">
+      <input type="text" class="form-control" id="sendMessageChat" >
+      <span class="input-group-btn"><button class="btn btn-primary" id ="chatsend" type="button">Send</button>
+      </span>
+      </div>
+      </div>
+      </div>
+      </div>
+    </div>
   </div>
      </div>
      </div>
@@ -415,27 +582,7 @@ videti kako ovo ubacite a da ne glavi cetvrtu cetvrtinu
 <div class='counter'>{{getCountdown}}</div>
 
 
+.img-circle
 
-    <div class="chat">
-      <div class ="panel panel-default">
-      <div class="panel-heading">Chat</div>
-      <div class="panel-body">
-      <div class="container">
-      <div class="row message-bubble">
-      <p class="text-muted">Jovan</p>
-      <span>Work?</span>
-      </div>
-      </div>
-      <div class="panel-footer">
-      <div class="input-group">
-      <input type="text" class="form-control" id="sendMessage" >
-      <span class="input-group-btn">
-      <button class="btn btn-default" id ="chatsend" type="button">Send</button>
-      </span>
-      </div>
-      </div>
-      </div>
-      </div>
-    </div>
 
 -->

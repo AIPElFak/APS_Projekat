@@ -261,6 +261,12 @@ if(Meteor.isClient)
 	});
 
 	Template.loby.events({
+
+		'click .test':function(event)
+		{
+			$('#configModal').modal('hide');
+		},
+
 		'click .logout': function(event){
 	    	Meteor.logout();
 	    	Router.go('home');
@@ -586,4 +592,3 @@ if(Meteor.isServer)
 	 streamer.allowRead('all');
   streamer.allowWrite('all');
 }
-
