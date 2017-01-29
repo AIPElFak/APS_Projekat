@@ -1,3 +1,5 @@
+//OBRATITI PAZNJU ZA APS PRILIKOM ISTOVREMENOG KLIKA ZA ULAZAK U SOBU!
+
 import { Template } from 'meteor/templating';
 
 /*import { TopTen } from '../imports/api/top_10.js';
@@ -21,7 +23,8 @@ const streamer = new Meteor.Streamer('chat');
 
 var tipSobe = "All";
 var returnRooms = Rooms.find({gameStatus: "0"});
-
+var id_room;
+var id_rly_1;
 Meteor.startup(function () {
 
     sAlert.config({
@@ -62,7 +65,6 @@ Router.route('/register',{
 	name: 'register',
 	template: 'register',
 
-
 	onBeforeAction: function(){
         var currentUser = Meteor.userId();
         if(!currentUser){
@@ -82,13 +84,19 @@ Router.route('/guess',{
 
 	onBeforeAction: function(){
         var currentUser = Meteor.userId();
-        if(currentUser){
+        id_room = Session.get("id_room");
+        alert(id_room);
+        alert(currentUser);
+        if(currentUser && id_room){
            // this.next();
            // alert("Logovan");
             this.next();
+
+            //Meteor.users.update({_id: currentUser}, {$set: {profile: {in_game: true}}});
+
         } else {
 
-            Router.go('home');
+            Router.go('loby');
         }
     }
 });
@@ -163,7 +171,8 @@ if(Meteor.isClient)
 		            email: email,
 		            profile: {
 				        points: points,
-				        avatar: "/images/user.png"
+				        avatar: "/images/user.png",
+				        in_game: false
 				    },
 		            password: password
 		            
@@ -261,12 +270,6 @@ if(Meteor.isClient)
 	});
 
 	Template.loby.events({
-
-		'click .test':function(event)
-		{
-			$('#configModal').modal('hide');
-		},
-
 		'click .logout': function(event){
 	    	Meteor.logout();
 	    	Router.go('home');
@@ -335,15 +338,27 @@ if(Meteor.isClient)
 
 	    	//roomType oznacava da li je soma private ili publuc, false-public, true-private
 
+	    	
+
 	    	if(passwordRoom.length > 0)
 	    	{
-	    		Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], gameStatus: "0", roomType: true });
+	    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], gameStatus: "0", roomType: true });
 	    	}
 
 	    	else
 	    	{
-	    		Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], gameStatus: "0", roomType: false });
+	    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], gameStatus: "0", roomType: false });
 	    	}
+
+	    	Session.set("id_room",id_rly_1);
+	    	$(".createRoom").attr("action","/guess?id="+id_rly_1);
+	    	Router.go('guess', {query: 'q=s'});
+
+	    },
+
+	    'click #closeModal': function(event){
+	    	alert("SADSA");
+	    	$("#closeModal").modal('hide');
 	    },
 
 	    'change #sel1': function(event){
@@ -382,8 +397,39 @@ if(Meteor.isClient)
 	    		{
 	    			roomType_tmp = "Public";
 	    		}
+
 	    		$(".listaSoba").append("<a href ='#' class='roomclick'><div class='li-group-item'><li class='list-group-item'><img src ='"+myDoc.image+"'/></li><span class='room'>Room: </span><span class='name'>"+myDoc.name+"</span> <span class='players'>Players: </span><span class='prvideo'>"+myDoc.player_ids.length+"</span><span class='drugideo'>/</span><span class='trecideo'>"+myDoc.maxPlayer+"</span><span class='status'>Status:</span><span class='statusname'>"+roomType_tmp+"</span></div></a>");
 	    	});
+	    },
+
+	    'click .imgClick': function(event){
+	    	var id_element = event.target.id;
+
+	    	var id_element_arr = id_element.split('.');
+
+	    	var id_rly = id_element_arr[1];
+
+	    	var room_tmp = Rooms.findOne({_id: id_rly});
+
+	    	var max_player = room_tmp.maxPlayer;
+
+	    	var trenutno_player = room_tmp.player_ids.length;
+
+	    	if( max_player == (trenutno_player + 1) )
+	    	{
+
+	    		Rooms.update({_id: id_rly}, {$set: {gameStatus: "1"}});
+	    		Rooms.update({_id: id_rly}, {$push: {player_ids: Meteor.userId()}});
+	    		Session.set("id_room",id_rly);
+	    		Router.go('guess');
+	    	}
+
+	    	else if( max_player > trenutno_player)
+	    	{
+	    		Rooms.update({_id: id_rly}, {$push: {player_ids: Meteor.userId()}});
+	    		Session.set("id_room",id_rly);
+	    		Router.go('guess');
+	    	}
 	    }
 
 
@@ -423,6 +469,10 @@ if(Meteor.isClient)
 
 		rooms: function(){
 			return returnRooms
+		},
+
+		id_room_rly: function(){
+			return id_rly_1;
 		}
 
 		
@@ -482,9 +532,30 @@ if(Meteor.isClient)
 	Template.guess.helpers({
 
 		chatsend: function(message) {
-    streamer.emit('message', message);
-    console.log('me: ' + message);
-  }
+		    streamer.emit('message', message);
+		    console.log('me: ' + message);
+		 },
+
+	  	getCountdown: function(){
+			return countdown.get();
+		}
+	});
+
+	Template.guess.events({
+
+		'click #start': function(event){
+
+			/*countdown.start(function() {
+
+	    // radi nesto kad se zavrsi
+	    		clearInterval();
+			});*/
+
+			alert(id_room);
+
+		}
+
+
 	});
 
 	 sendMessage = function(message) {
@@ -562,33 +633,9 @@ crtanje = function(){
 
 };
 
-Template.guess.helpers({
-
-	getCountdown: function()
-	{
-		return countdown.get();
-	}
-});
-
-Template.guess.events({
-
-	'click #start': function(event){
-
-		countdown.start(function() {
-
-    // radi nesto kad se zavrsi
-    		clearInterval();
-		});
-
-
-
-	}
-
-
-});
-
 if(Meteor.isServer)
 {
-	 streamer.allowRead('all');
-  streamer.allowWrite('all');
+	streamer.allowRead('all');
+    streamer.allowWrite('all');
 }
+
