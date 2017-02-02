@@ -399,6 +399,10 @@
   <div class="well">
     <div class="guess">
 
+      {{#each playersInfoInRoom}}
+          {{> usersInRoomInfo}}
+      {{/each}}
+
     </div>
     </div>
   </div>
@@ -407,6 +411,15 @@
   </div>
      </div>
      </div>
+</template>
+
+<template name="usersInRoomInfo">
+
+<img src="{{image}}" />
+<p>{{username}}</p>
+<p>{{points}}</p>
+
+
 </template>
 
 <!-- 
