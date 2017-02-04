@@ -8,6 +8,7 @@ import { Rooms } from '../imports/api/rooms.js';*/
 
 TopTen = new Mongo.Collection('top_10');
 Rooms = new Mongo.Collection('rooms');
+GuessWords = new Mongo.Collection('guess_words');
 
 import { ReactiveVar } from 'meteor/reactive-var';
 
@@ -17,9 +18,29 @@ import './main.html';
 //biram vreme
 
 
+	var canvas, canvas1, ctx, flag = false,		
+	        prevX = 0,		
+	        currX = 0,		
+	        prevY = 0,		
+	        currY = 0,		
+	        dot_flag = false;		
+			
+	 var position;
+
+	 var interval;
+
+	 var arrya_points_draw = [];		
+			
+	    var x = "black",		
+	        y = 2;		
+
+
 //definisem stream
 const streamer = new Meteor.Streamer('chat');
 
+Session.set("firstTimeOnSite",0);
+
+Session.set("numberOfPoints",0);
 
 var tipSobe = "All";
 var returnRooms = Rooms.find({gameStatus: "0"});
@@ -97,17 +118,23 @@ Router.route('/guess/:_id',{
            		//ispitujem da li je igrac u nekoj sobi
            		var is_in_room = Meteor.users.findOne({_id: currentUser});
 
-	           if(is_in_room.profile.in_game)
+	          if(is_in_room && is_in_room.profile.in_game)
 	           {
 	           		//ako jeste ispitujem da li je on u toj sobi
 		       	 	var his_room = Rooms.findOne({_id: id_room_url, player_ids: currentUser});
 
 		       	 	if(his_room)
 		       	 	{
+		       	 		/*for(var i = 0; i < his_room.pointsArray.length; i++)
+		       	 		{
+		       	 			console.log(his_room.pointsArray[i]);
+		       	 		}*/
 		       	 		//ako jeste super
 		       	 		Session.set("id_room_url",id_room_url);
+		       	 		
 		       	 		this.next();
-		       	 		Meteor.users.update({_id: currentUser}, {$set: {"profile.in_game": true}});
+		       	 		
+		       	 		Session.set("drawIdPlayer",his_room.drawIdPlayer);
 		       	 	}
 
 		       	 	else
@@ -124,7 +151,7 @@ Router.route('/guess/:_id',{
 
 		       	 	var his_room = Rooms.findOne({_id: id_room_url});
 
-		       	 	if(his_room.gameStatus == "0")
+		       	 	if(his_room && his_room.gameStatus == "0")
 		       	 	{
 		       	 		//igra nije pocela ispitujemo br igraca
 
@@ -136,7 +163,7 @@ Router.route('/guess/:_id',{
 			       	 		{
 			       	 			//nema sifru samo ga ubacujemo
 			       	 			Rooms.update({_id: id_room_url}, {$addToSet: {player_ids: Meteor.userId()}});
-	    						Rooms.update({_id: id_room_url}, {$push: {player_points: 0}});
+	    						Rooms.update({_id: id_room_url}, {$push: {player_points: [0]}});
 	    						this.next();
 		       	 		        Meteor.users.update({_id: currentUser}, {$set: {"profile.in_game": true}});
 			       	 		}
@@ -208,7 +235,7 @@ Router.route('/loby',{
 
            var is_in_room = Meteor.users.findOne({_id: currentUser});
 
-           if(!is_in_room.profile.in_game){
+            if(is_in_room && !is_in_room.profile.in_game){
             	this.next();
            }
 
@@ -423,17 +450,17 @@ if(Meteor.isClient)
 
 	    	//roomType oznacava da li je soma private ili publuc, false-public, true-private
 
-	    	
-
 	    	if(passwordRoom.length > 0)
 	    	{
-	    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], player_points: [0], gameStatus: "0", roomType: true });
+	    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: true, drawIdPlayer: Meteor.userId() });
 	    	}
 
 	    	else
 	    	{
-	    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], player_points: [0], gameStatus: "0", roomType: false });
+	    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: false, drawIdPlayer: Meteor.userId() });
 	    	}
+
+	    	Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
 
 	    	Session.set("id_room",id_rly_1);
 	    	$(".createRoom").attr("action","/guess/"+id_rly_1);
@@ -507,7 +534,9 @@ if(Meteor.isClient)
 
 	    		Rooms.update({_id: id_rly}, {$set: {gameStatus: "1"}});
 	    		Rooms.update({_id: id_rly}, {$addToSet: {player_ids: Meteor.userId()}});
-	    		Rooms.update({_id: id_rly}, {$push: {player_points: 0}});
+	    		Rooms.update({_id: id_rly}, {$push: {player_points: [0]}});
+
+	    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
 
 	    		Session.set("id_room",id_rly);
 		    	/*$(".createRoom").attr("action","/guess?id="+id_rly);
@@ -524,7 +553,9 @@ if(Meteor.isClient)
 	    	else if( max_player > trenutno_player)
 	    	{
 	    		Rooms.update({_id: id_rly}, {$addToSet: {player_ids: Meteor.userId()}});
-	    		Rooms.update({_id: id_rly}, {$push: {player_points: 0}});
+	    		Rooms.update({_id: id_rly}, {$push: {player_points: [0]}});
+
+	    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
 
 	    		Session.set("id_room",id_rly);
 		    	/*$(".createRoom").attr("action","/guess/"+id_rly);
@@ -672,50 +703,161 @@ if(Meteor.isClient)
 			return jsonObj;
 
 			//return JSON.parse[string];
+		},
+
+		test: function(){
+
+			if(Meteor.userId() != Session.get("drawIdPlayer") || Session.get("firstTimeOnSite") == 0)
+	    	{
+	    		var p = Session.get("numberOfPoints");
+
+				var query = Rooms.findOne({_id: Session.get("id_room_url")});
+
+				var boja;
+
+				for( p; p < query.pointsArray.length; p++ )
+		    	{
+		    		switch(query.pointsArray[p])
+		    		{
+		    			case 0:
+		    				boja = query.pointsArray[++p];
+		    			break;
+
+		    			case 1:
+
+		    			break;
+
+		    			case 2:
+		    				ctx.beginPath();
+		    				ctx.moveTo(query.pointsArray[p - 2],query.pointsArray[p - 1]);
+		    				ctx.lineTo(query.pointsArray[++p],query.pointsArray[++p]);
+		    				ctx.lineWidth = y;
+		    				ctx.strokeStyle = boja;		
+			       			ctx.stroke();
+		    				ctx.closePath();
+		    			break;
+
+		    			case 3:
+		    				ctx.beginPath();
+		    				ctx.strokeStyle = boja;
+		    				ctx.fillRect(query.pointsArray[++p],query.pointsArray[++p],2,2);		    							
+		    				ctx.closePath();
+		    			break;
+		    		}
+		    		/*ctx.beginPath();	
+			        ctx.moveTo(query.pointsArray[p], query.pointsArray[p + 1]);		
+			        ctx.lineTo(query.pointsArray[p + 2], query.pointsArray[p + 3]);*/
+
+		    	}
+
+		    	Session.set("numberOfPoints", query.pointsArray.length);
+
+		    	Session.set("firstTimeOnSite",1);
+		    }
+
+			return true;
+		},
+
+		keyWord: function(){
+
+			var keyWord = "";
+
+			if(Meteor.userId() == Session.get("drawIdPlayer"))
+			{
+				keyWord = "Nova rec";
+			}
+
+			return keyWord;
 		}
 	});
+		
+	Template.guess.rendered = function() {		
+	    if(!this._rendered) {		
+	      this._rendered = true;		
+	      console.log('Template onLoad');		
+	      init();		
+	    }		
+	}
+
+	/*Template.guess.helpers({
+		test: function
+	});*/
 
 	Template.guess.events({
 
 		'click #start': function(event){
 
-			/*countdown.start(function() {
+			countdown.start(function() {
 
 	    // radi nesto kad se zavrsi
 	    		clearInterval();
-			});*/
+			});
 
-			//alert(id_room);
+		},
 
-			var jsonObj = [];
+		'click #penred': function(event)
+		{
+			var pen = document.getElementById("can");
+ 			pen.style.cursor = "url('/room/red.cur'), auto"
+ 			x="red";
+ 			arrya_points_draw.push(0);//naredba za boju
+	        arrya_points_draw.push(x);
 
-			var allUsersInRoom = Rooms.findOne({_id: Session.get("id_room_url")});
+		},
 
-			for(var j = 0; j < allUsersInRoom.player_ids.length; j++)
-			{
-				var item = {};
+		'click #penblue': function(event)
+		{
+			var pen = document.getElementById("can");
+ 			pen.style.cursor = "url('/room/blue.cur'), auto"
+ 			x="blue";
+ 			arrya_points_draw.push(0);//naredba za boju
+	        arrya_points_draw.push(x);
 
-				console.log(allUsersInRoom.player_ids[j]);
+		},
 
-				var usersInfo = Meteor.users.findOne({_id: allUsersInRoom.player_ids[j]});
-
-				item["username"] = usersInfo.username;
-		        item["image"] = usersInfo.profile.avatar;
-		        item["points"] = allUsersInRoom.player_points[j];
-
-		        jsonObj.push(item);
-
-				//string += {username: usersInfo.username, image: usersInfo.profile.avatar, points: allUsersInRoom.player_points[j]};
-
-			}
-			//var dasdasasd = JSON.parse[string];
-
-			//return jsonObj;
+		'click #penyellow': function(event)
+		{
+			var pen = document.getElementById("can");
+ 			pen.style.cursor = "url('/room/yellow.cur'), auto"
+ 			x="yellow";
+ 			arrya_points_draw.push(0);//naredba za boju
+	        arrya_points_draw.push(x);
 
 		}
+		,
 
+		'click #pengreen': function(event)
+		{
+			var pen = document.getElementById("can");
+ 			pen.style.cursor = "url('/room/green.cur'), auto";
+ 			x="green";
+ 			arrya_points_draw.push(0);//naredba za boju
+	        arrya_points_draw.push(x);
+
+		},
+
+		'click #penblack': function(event)
+		{
+			var pen = document.getElementById("can");
+ 			pen.style.cursor = "url('/room/black.cur'), auto";
+ 			x="black";
+ 			arrya_points_draw.push(0);//naredba za boju
+	        arrya_points_draw.push(x);
+
+		},
+
+		'click #eraser': function(event)
+		{
+			var pen = document.getElementById("can");
+ 			pen.style.cursor = "url('/room/eraser.cur'), auto";
+ 			x="white";
+ 			arrya_points_draw.push(0);//naredba za boju
+	        arrya_points_draw.push(x);
+		}
 
 	});
+
+	
 
 	 sendMessage = function(message) {
     streamer.emit('message', message);
@@ -728,6 +870,183 @@ if(Meteor.isClient)
 
 }
 
+	//-----------------FUNKCIJA ZA CRTANJE---------------------
+	    		
+	    function init() {		
+	        canvas = document.getElementById('can');		
+	        canvas1 = $( "#can" );		
+	        ctx = canvas.getContext("2d");		
+	        w = canvas.width;		
+	        h = canvas.height;		
+
+	        
+			
+	        position =  canvas1.offset();		
+			
+	    	if(Meteor.userId() == Session.get("drawIdPlayer"))
+	    	{	
+		        canvas.addEventListener("mousemove", function (event) {		
+		            findxy('move', event)		
+		        }, false);		
+		        canvas.addEventListener("mousedown", function (event) {		
+		            findxy('down', event)		
+		        }, false);		
+		        canvas.addEventListener("mouseup", function (event) {		
+		            findxy('up', event)		
+		        }, false);		
+		        canvas.addEventListener("mouseout", function (event) {		
+		            findxy('out', event)		
+		        }, false);		
+		    }
+
+		    	if(Session.get("firstTimeOnSite") == 0)
+		    	{
+		    		var p = Session.get("numberOfPoints");
+
+					var query = Rooms.findOne({_id: Session.get("id_room_url")});
+
+					var boja;
+
+					for( p; p < query.pointsArray.length; p++ )
+			    	{
+			    		switch(query.pointsArray[p])
+			    		{
+			    			case 0:
+			    				boja = query.pointsArray[++p];
+			    			break;
+
+			    			case 1:
+
+			    			break;
+
+			    			case 2:
+			    				ctx.beginPath();
+			    				ctx.moveTo(query.pointsArray[p - 2],query.pointsArray[p - 1]);
+			    				ctx.lineTo(query.pointsArray[++p],query.pointsArray[++p]);
+			    				ctx.lineWidth = y;
+			    				ctx.strokeStyle = boja;		
+				       			ctx.stroke();
+			    				ctx.closePath();
+			    			break;
+
+			    			case 3:
+			    				ctx.beginPath();
+			    				ctx.strokeStyle = boja;
+			    				ctx.fillRect(query.pointsArray[++p],query.pointsArray[++p],2,2);		    							
+			    				ctx.closePath();
+			    			break;
+			    		}
+			    		/*ctx.beginPath();	
+				        ctx.moveTo(query.pointsArray[p], query.pointsArray[p + 1]);		
+				        ctx.lineTo(query.pointsArray[p + 2], query.pointsArray[p + 3]);*/
+
+			    	}
+
+			    	Session.set("numberOfPoints", query.pointsArray.length);
+
+			    	Session.set("firstTimeOnSite",1);
+		    	
+		    	/*var arrya_points = Rooms.findOne({_id: Session.get("id_room_url")});
+
+		    	for(var p = 0; p < arrya_points.pointsArray.length; p = p + 4 )
+		    	{
+		    		ctx.beginPath();
+		    		console.log(arrya_points.pointsArray[p]);		
+			        ctx.moveTo(arrya_points.pointsArray[p], arrya_points.pointsArray[p + 1]);		
+			        ctx.lineTo(arrya_points.pointsArray[p + 2], arrya_points.pointsArray[p + 3]);
+
+			        ctx.strokeStyle = x;		
+			        ctx.lineWidth = y;		
+			        ctx.stroke();		
+			        ctx.closePath();	
+		    	}*/
+		    }
+	    }		
+	
+	    		
+	    function draw() {		
+	        ctx.beginPath();		
+	        ctx.moveTo(prevX, prevY);		
+	        ctx.lineTo(currX, currY);
+
+	        ctx.strokeStyle = x;		
+	        ctx.lineWidth = y;		
+	        ctx.stroke();		
+	        ctx.closePath();		
+	    }		
+	    		
+	    function erase() {		
+	        var m = confirm("Want to clear");		
+	        if (m) {		
+	            ctx.clearRect(0, 0, w, h);		
+	            document.getElementById("canvasimg").style.display = "none";		
+	        }		
+	    }		
+	    		
+	    function save() {		
+	        document.getElementById("canvasimg").style.border = "2px solid";		
+	        var dataURL = canvas.toDataURL();		
+	        document.getElementById("canvasimg").src = dataURL;		
+	        document.getElementById("canvasimg").style.display = "inline";		
+	    }		
+	    		
+	    function findxy(res, e) {		
+	        if (res == 'down') {
+	        	interval = setInterval(insertPointsInToDB(), 100);
+	            prevX = currX;		
+	            prevY = currY;		
+	            currX = e.clientX - position.left;		
+	            currY = e.clientY - position.top;		
+	    		
+	            flag = true;		
+	            dot_flag = true;		
+	            if (dot_flag) {		
+	                ctx.beginPath();		
+	                ctx.fillStyle = x;		
+	                ctx.fillRect(currX, currY, 2, 2);		
+	                ctx.closePath();		
+	                dot_flag = false;
+
+	                //Dot
+	                arrya_points_draw.push(3);
+	                arrya_points_draw.push(currX);
+	                arrya_points_draw.push(currY);
+
+	                //Rooms.update({_id: Session.get("id_room_url")}, {$set: {pointsArray: [currX,currY,2,2]}});
+	                //Rooms.update({ _id: Session.get("id_room_url") },{ $push: { pointsArray: { $each: [ currX, currY, 2, 2 ] } } });
+	            }		
+	        }		
+	        if (res == 'up' || res == "out") {		
+	            flag = false;
+	            clearInterval(interval);
+	            insertPointsInToDB();		
+	        }		
+	        if (res == 'move') {		
+	            if (flag) {		
+	                prevX = currX;		
+	                prevY = currY;		
+	                currX = e.clientX - position.left;		
+	                currY = e.clientY - position.top;
+
+	                //LineTo
+	                arrya_points_draw.push(2);
+	                arrya_points_draw.push(currX);
+	                arrya_points_draw.push(currY);
+
+	                //Rooms.update({ _id: Session.get("id_room_url") },{ $push: { pointsArray: { $each: [ prevX, prevY, currX, currY ] } } });
+	                //Rooms.update({_id: Session.get("id_room_url")}, {$set: {pointsArray: [prevX,prevY,currX,currY]}});		
+	                draw();		
+	            }		
+	        }		
+	    }
+
+	    function insertPointsInToDB()
+	    {
+	    	Rooms.update({ _id: Session.get("id_room_url") },{ $push: { pointsArray: { $each: arrya_points_draw } } });
+	    	arrya_points = [];
+	    }
+
+//------------------------------END---------------------------------------
 
 var maxcounter = 10;
 var firstquad = maxcounter/4;
@@ -753,6 +1072,7 @@ crtanje = function(){
 	quad2 = document.querySelector('.quad2'),
 	quad3 = document.querySelector('.quad3'),
 	quad4 = document.querySelector('.quad4'),
+	timer = document.querySelector('timeout'),
 
 			progress = progressbar.getAttribute('data-progress'); //uzimam trenutnu vrednost
 			progress++;
@@ -768,7 +1088,8 @@ crtanje = function(){
 	else if (progress > firstquad && progress <= secnd) {
 	  quad1.setAttribute('style', 'transform: skew(-90deg)'); // krije prvi luk
 	  quad2.setAttribute('style', 'transform: skewY(' + (progress - firstquad) * (90 / firstquad) + 'deg)'); //iscrtava drugi luk
-	  progressbar.setAttribute('style', 'box-shadow: inset 0px 0px 0px 20px yellow'); 
+	  progressbar.setAttribute('style', 'box-shadow: inset 0px 0px 0px 20px yellow');
+	   //timer.setAttribute('style', 'color: yellow;');
 	}
 
 	//izmedju druge i trece, pravi trecu cetvrtinu
@@ -777,6 +1098,7 @@ crtanje = function(){
 	  quad2.setAttribute('style', 'transform: skewY(90deg)'); // krije drugi luk
 	  quad3.setAttribute('style', 'transform: skew(' + (progress - secnd) * (-90 / firstquad) + 'deg)'); // iscrtava treci
 	  progressbar.setAttribute('style', 'box-shadow: inset 0px 0px 0px 20px orange');
+	 // timer.setAttribute('style', 'color: orange;');
 	}
 
 	//izmedju trece i cetvrte, pravi cetvrtu cetvrtinu
@@ -786,6 +1108,7 @@ crtanje = function(){
 	  quad3.setAttribute('style', 'transform: skew(-90deg)'); // krije treci luk
 	  quad4.setAttribute('style', 'transform: skewY(' + (progress - thirdquad) * (90 / firstquad) + 'deg)'); //iscrtava cetvrti
 	  progressbar.setAttribute('style', 'box-shadow: inset 0px 0px 0px 20px red');
+	//  timer.setAttribute('style', 'color: red;');
 	}
 	}
 
@@ -796,5 +1119,8 @@ if(Meteor.isServer)
 {
 	streamer.allowRead('all');
     streamer.allowWrite('all');
+
+    
 }
+
 

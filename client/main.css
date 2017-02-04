@@ -263,11 +263,6 @@ form
 	position: relative;
 	float: left;
 }
-
-.imgClick{
-	cursor: pointer;
-}
-
 .icon-choice img
 {
 	width: 40px;
@@ -377,8 +372,7 @@ ul.thumbnails.image_picker_selector li .thumbnail.selected
 }
 .draw
 {
-	height: 400px;
-	width: 80%;
+	cursor: url('/room/black.cur'), auto;
 	background-color: rgba(255, 255, 255, 1);
 	display: inline-block;
 	border-radius: 4px;
@@ -411,7 +405,7 @@ ul.thumbnails.image_picker_selector li .thumbnail.selected
 }
 .info
 {
-	margin-left: 20px;
+	
 }
 .penblue
 {
@@ -427,6 +421,24 @@ ul.thumbnails.image_picker_selector li .thumbnail.selected
 	height: 50px;
 	width: 25px;
 }
+.olovke1
+{
+	height: 50px;
+	width: 25px;
+	float: right;
+	
+}
+.inputzaguess
+{
+	width: 100%;
+	display: block;
+	padding: 6px 12px;
+	font-size: 14px;
+	color: #555;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
 .well
 {
 	background-color: rgba(245, 245, 245, 0.7);
@@ -437,11 +449,28 @@ ul.thumbnails.image_picker_selector li .thumbnail.selected
 }
 .draw:hover
 {
-	cursor: url(room/blue.png), auto;
+	
+}
+.log
+{
+	height: 300px;
+}
+.chatlog
+{
+	height: 100px;
+}
+#sendMessage
+{
+	margin-bottom: 5px;
 }
 .message-bubble 
 {
     padding: 10px 0px 10px 0px;
+}
+.allusers
+{
+	height: 100%;
+	width: 100%;
 }
 
 .message-bubble:nth-child(even) { background-color: #F5F5F5; }
@@ -487,8 +516,8 @@ table th
 }
 .counter {
   position: absolute;
-  height: 50%;
-  width: 50%;
+  height: 20px;
+  width: 20px;
   top: 0%;
   left: 0%;
   text-align: center;
@@ -496,6 +525,11 @@ table th
   border-radius: 50%;
   background: transparent;
   z-index: 4;
+}
+
+.infoguessu
+{
+	margin-left: 20px;
 }
 
 .data-progress > div
@@ -507,7 +541,11 @@ table th
   border-radius: 0%;
 }
 
+.timeout
+{
 
+  color: green;
+}
 .quad1,
 .quad2 {
   left: 50%;
@@ -542,18 +580,48 @@ div[data-progress] {
 }
 
 
+.pictureguess
+{
+	height: 70px;
+	width:70px;
+}
+.pictureguess img
+{
+	height: 70px;
+	width: 70px;
+}
+.infoguess
+{
+margin-top: 15px;
+}
 
 
+.userguess
+{
+	display: inline-flex;
+	margin-top: 5px;
 
+}
+.counter
+{
+	float: right;
+	height: 50px;
+	width: 50px;
+}
+#playing
+{
 
+	border: 2px solid gold;
+    border-radius: 5px;
+}
 
+}
+.infoguessu
+{
 
+margin-left: 20px;
 
-
-
-
-
-
+}
 
 
 @media only screen and (min-width: 600px) {
