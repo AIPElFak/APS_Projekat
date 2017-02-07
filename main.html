@@ -1,0 +1,533 @@
+<body>
+   {{> sAlert}}
+</body>
+
+<template name ="main">
+  <div class ="header">
+  <img src = "/images/logo.png" class = "logo"/></div>
+  {{> yield}}
+</template>
+
+
+<template name ="home">
+  <div class ="container">
+    <div class ="col-md-3 col-sm-2"></div>
+      <div class ="col-md-6 col-sm-8 login">
+        <div class ="alt-auth">
+
+          <button class="facebookLogin" data-type="facebook">
+            <i class="fa fa-facebook"></i>
+          </button>
+
+          <button class="twitterLogin" data-type="twitter">
+           <i class="fa fa-twitter"></i>
+          </button>
+
+          <button class="googleLogin" data-type="google">
+            <i class="fa fa-google"></i>
+          </button>
+
+        </div>
+
+        <form id ="login-form" class="loginForm">
+          <label>Username or Email</label>
+          <input type ="text" name ="username" class="form-control" placeholder="Username / Email" required>
+          <label>Password</label>
+          <input type  ="password" name ="password" class ="form-control" placeholder="Password" pattern=".{6,15}" required title="6 characters minimum, 15 characters maximum">
+          <br>
+          <span id="errorLogin"></span>
+          <br>
+          <input type="submit" value ="Login" class ="btn btn-primary">
+          <br>
+          <br>
+          <a href="{{pathFor route='forgot'}}" class="login-link">Forgot password?</a>
+        </form>
+
+      </div>
+  </div>
+
+  <div class="buttons-fixed">
+    <div class="special">
+      <a href="{{pathFor route='register'}}" class="register-button">
+      <i class="fa fa-sign-out"></i>
+      Register
+      </a>
+      <br>
+      <a href="{{pathFor route='loby'}}" class="guest-button">
+      <i class="fa fa-rocket"></i>
+      Play as a Guest
+      </a>
+    </div>
+  </div>
+
+</template>
+
+<template name ="register">
+  <div class ="container">
+    <div class ="col-md-3 col-sm-2"></div>
+    <div class ="col-md-6 col-sm-8 login">
+      <div class ="alt-auth">
+        <button data-type="facebook">
+          <i class="fa fa-facebook"></i>
+        </button>
+
+        <button data-type="twitter">
+          <i class="fa fa-twitter"></i>
+        </button>
+
+        <button data-type="google">
+          <i class="fa fa-google"></i>
+        </button>
+
+      </div>
+      <form id ="register-form" class="registerForm">
+        <!--<label>Full Name</label>
+        <input type ="text" name ="fullname" class="form-control">-->
+        <label>Username</label>
+        <input type  ="text" name ="username" class ="form-control" pattern=".{4,15}"   required title="4 characters minimum, 15 characters maximum">
+        <label>Email Address</label>
+        <input type  ="email" name ="email" class ="form-control" required>
+        <label>Password</label>
+        <input type  ="password" name ="password" class ="form-control" pattern=".{6,15}" required title="6 characters minimum, 15 characters maximum">
+        <label>Confirm Password</label>
+        <input type  ="password" name ="password_confirm" class ="form-control" pattern=".{6,15}" required title="6 characters minimum, 15 characters maximum">
+        <br>
+        <span id="errorRegister"></span>
+        <br>
+        <input type="submit" value ="Register" class ="btn btn-primary">
+        <br>
+        <br>
+        <a href="{{pathFor route='home'}}" class="login-link">Already have an account?</a>
+        <br>
+        <a href="{{pathFor route='forgot'}}" class="login-link">Forgot password?</a>
+      </form>
+    </div>
+  </div>
+</template>
+
+<template name ="forgot">
+  <div class ="container">
+    <div class ="col-md-3 col-sm-2"></div>
+    <div class ="col-md-6 col-sm-8 login">
+      <form id ="forgot-form-one">
+        <label>Email Address</label>
+        <input type ="text" name ="email" class="form-control">
+        <input type  ="hidden" name ="stage" class ="form-control">
+        <br>
+        <input type="submit" value ="Send Reset Code" class ="btn btn-primary">
+        <br>
+        <br>
+        </form>
+        <form id ="forgot-form-two" style="display:none;" action="#">
+        <label>Verification Code</label>
+        <input type ="text" name ="verify" class="form-control">
+        <label>New Password</label>
+        <input type ="password" name ="new-pass" class="form-control">
+        <label>Confirm New Password</label>
+        <input type ="password" name ="confirm-pass" class="form-control">
+        <input type  ="hidden" name ="stage" class ="form-control">
+        <input type  ="hidden" name ="email" class ="form-control">
+        <br>
+        <input type="submit" value ="Rest Password" class ="btn btn-primary">
+        <br>
+        <br>
+      </form>
+    </div>
+  </div>
+</template>
+
+<template name ="loby">
+<div class ="container">
+<div class="row">
+  <div class="col-sm-4">
+  <div class ="user">
+    <div class ="icon">
+      <img src = "{{playerAvatar}}" />
+    </div>
+    <div class ="info">
+      <p class ="username">{{playerUsername}}</p>
+      <button class="btn btn-default btn-sm settings" data-toggle="modal" data-target="#configModal">
+        <i class="fa fa-cog"></i>
+      </button>
+
+    <div id="configModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">User Settings</h4>
+          </div>
+          <div class="modal-body">
+            <h3>Change Icon</h3>
+          <form class ="form-group changeAvatarForm">
+            <select class="image-picker selectAvatar">
+              <option data-img-src="/images/y1.png" value="/images/y1.png">1</option>
+              <option data-img-src="/images/y2.png" value="/images/y2.png">2</option>
+              <option data-img-src="/images/y3.png" value="/images/y3.png">3</option>
+              <option data-img-src="/images/y4.png" value="/images/y4.png">4</option>
+              <option data-img-src="/images/d1.jpg" value="/images/d1.jpg">5</option>
+              <option data-img-src="/images/d2.jpg" value="/images/d2.jpg">6</option>
+              <option data-img-src="/images/d3.jpg" value="/images/d3.jpg">7</option>
+              <option data-img-src="/images/d4.jpg" value="/images/d4.jpg">8</option>
+              <option data-img-src="/images/d5.jpg" value="/images/d5.jpg">9</option>
+              <option data-img-src="/images/htf1.gif" value="/images/htf1.gif">10</option>
+              <option data-img-src="/images/htf2.gif" value="/images/htf2.gif">11</option>
+              <option data-img-src="/images/htf3.gif" value="/images/htf3.gif">12</option>
+              <option data-img-src="/images/htf4.gif" value="/images/htf4.gif">13</option>
+              <option data-img-src="/images/lt1.jpg" value="/images/lt1.jpg">14</option>
+              <option data-img-src="/images/lt2.jpg" value="/images/lt2.jpg">15</option>
+              <option data-img-src="/images/lt3.jpg" value="/images/lt3.jpg">16</option>
+              <option data-img-src="/images/lt4.jpg" value="/images/lt4.jpg">17</option>
+              <option data-img-src="/images/s1.jpg" value="/images/s1.jpg">18</option>
+              <option data-img-src="/images/s2.png" value="/images/s2.png">19</option>
+              <option data-img-src="/images/s3.gif" value="/images/s3.gif">20</option>
+              <option data-img-src="/images/dd1.jpg" value="/images/dd1.jpg">21</option>
+              <option data-img-src="/images/dd2.jpg" value="/images/dd2.jpg">22</option>
+              <option data-img-src="/images/dd3.jpg" value="/images/dd3.jpg">23</option>
+              <option data-img-src="/images/dd4.jpg" value="/images/dd4.jpg">24</option>
+            </select>
+             <!--<input type="submit" value ="Change" class ="btn btn-primary changeAvatar">-->
+             <input type="button" value ="Change" class ="btn btn-primary changeAvatar">
+          </form>
+          {{> imagescript}}
+          <h3>Change Password</h3>
+          <form  class="changePasswordForm" id="change-form">
+            <label>Old Password</label>
+            <input type="password" name="old" class="form-control" id="oldPassword">
+            <label>New Password</label>
+            <input type="password" name="new" class="form-control" id="newPassword">
+            <label>Confirm Password</label>
+            <input type="password" name="conirm" class="form-control" id="confirmNewPassword">
+            <br>
+            <input type="button" value="Save" class="btn btn-primary savePassword">
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+      <a href="#" class ="btn btn-default btn-sm logout">
+        <i class ="fa fa-sign-out"></i>
+      </a>
+    </div>
+  </div>
+  <div class ="buttons">
+    <button type="button" class ="btn btn-primary action-create" data-toggle="modal" data-target="#createModal">Create</button>
+
+    <div id="createModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Create Game</h4>
+          </div>
+          <div class="modal-body">
+          <form class ="form-group" method="POST">
+           <label>Game Name</label>
+           <input type ="text" name="game-name" class="form-control roomName"  placeholder="Game Name" maxlength="30" required="required">
+           <label>Picture</label>
+            <select class="image-picker roomImage">
+              <option data-img-src="/images/room1.png" value="/images/room1.png">1</option>
+              <option data-img-src="/images/room2.png" value="/images/room2.png">2</option>
+              <option data-img-src="/images/room3.png" value="/images/room3.png">3</option>
+              <option data-img-src="/images/room4.png" value="/images/room4.png">4</option>
+              <option data-img-src="/images/room5.png" value="/images/room5.png">5</option>
+              <option data-img-src="/images/room6.png" value="/images/room6.png">6</option>
+            </select>
+             {{> imagescript}}
+           <label>Max Players</label>
+           <input type="number" name="players" min ="2" value="4" max ="8" class ="form-control maxPlayer">
+           <label>Rounds</label>
+           <input type="number" name="rounds" min="1" value="1" max="20" class="form-control numberRounds">
+           <label>Time Limit</label>
+           <select name="time-limit" class="form-control timeRound">
+            <option value = "30">0:30</option>
+            <option value = "60">1:00</option>
+            <option value = "90">1:30</option>
+            <option valule = "120">2:00</option>
+            <option value = "150">2:30</option>
+            <option value = "180">3:00</option>
+           </select>
+           <label>Password</label>
+           <input type ="password" name="password" class="form-control passwordRoom" placeholder="Leave blank for public room" pattern=".{6,15}" title="6 characters minimum, 15 characters maximum">
+           <br>
+           <input type="button" value ="Create" class ="btn btn-primary createRoom">
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" id="closeModal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <br>
+  </div>
+  <div class="col-sm-8">
+
+        <div class="form-group">
+          <select class="form-control" id="sel1">
+            <option>All</option>
+            <option>Public</option>
+            <option>Private</option>
+          </select>
+        </div>
+  <ul class="list-group listaSoba">
+
+   {{#each rooms}}
+          {{> room}}
+    {{/each}}
+
+  </ul>
+
+    
+
+  </div>
+   <div class="col-sm-4">
+      <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Leaderboard</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    	{{#each topUsers}}
+    		{{> topUser}}
+    	{{/each}}
+      
+    </tbody>
+  </table>
+   </div>
+</div>
+</div>
+
+</template>
+
+<template name="room">
+   <div class="roomclick">    
+     <div class="li-group-item">
+      <li class="list-group-item imgClick" id="li.{{_id}}">
+        <img src ="{{image}}" id="img.{{_id}}"/>
+      </li>
+   
+         <span class="room">Room: </span>
+         <span class="name">{{name}}</span> 
+         <span class="players">Players: </span>
+         <span class="prvideo">{{player_ids.length}}</span>
+         <span class="drugideo">/</span>
+         <span class="trecideo">{{maxPlayer}}</span>
+         <span class="status">Status:</span>
+         <span class="statusname">{{#if roomType}}Private{{else}}Public{{/if}}</span>
+
+     </div>
+    </div>
+</template>
+
+<template name="topUser">
+
+	<tr>
+		<td class="top{{_id}}">{{_id}}</td>
+		<td class="top{{_id}}"><i class="fa fa-trophy" id="top{{_id}}"></i> {{username}}</td>
+		<td class="top{{_id}}">{{points}}</td>
+	</tr>
+
+</template>
+
+<!--Videti sta i kako prebaciti ovo i srediti -->
+<template name="imagescript">
+  <script type="text/javascript">
+  $("select.image-picker").imagepicker({});
+  </script>
+</template>
+
+
+<template name="guess">
+ <div class="col-sm-2">
+ <div class="well">
+ <div class="allusers">
+
+
+
+     {{#each playersInfoInRoom}}    
+          {{> playerInfoInRoom}}    
+        {{/each}}
+
+
+{{#if test}}
+{{/if}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ </div>
+ </div>
+ </div>
+<div class ="container">
+<div class="row">
+
+   <div class="col-sm-10">
+   <div class="okvir">
+   <div class="well">
+   <canvas id="can" width="700px" height="400px" class="draw"></canvas>
+  
+   <div class="menu">
+   <div class="timer">
+   
+    <div data-progress="0" class="data-progress">
+  <div class="quad1"></div>
+  <div class="quad2"></div>
+  <div class="quad3"></div>
+  <div class="quad4"></div>
+
+</div>
+ 
+   </div>
+  
+   <div class="infoguessu">
+   <p class ="username">{{keyWord}}</p>
+   </div>
+  <br>
+   <br>
+   <br>
+   
+   <div class="paleta">
+   <a href="#" id="penblue"><img class="olovke" src = "/room/blue.png"/></a>
+   <a href="#" id="penred"><img class="olovke" src = "/room/red.png"/></a>
+   <a href="#" id="penyellow"><img class="olovke" src = "/room/yellow.png"/></a>
+   <a href="#" id="pengreen"><img class="olovke" src = "/room/green.png"/></a>
+    <a href="#" id="penblack"><img class="olovke" src = "/room/black.png"/></a>
+       <a href="#" id="eraser"><img class="olovke1" src = "/room/eraser.png"/></a>
+  
+   </div>
+ <br>
+   <div class ="buttonstart">
+   <button type="button" id="start" class="btn btn-primary">Start</button>
+    </div>
+   </div>
+    </div>
+   </div>
+    </div>
+   
+
+  <div class="col-sm-2">
+  
+    <div class="guess">
+    <div class="panel panel-default">
+    <div class="panel-heading">Guess</div>
+    <div class="panel-body">
+    <div class="log">
+    <div class="rowmessage-bubble">
+    <p class="text-muted"></p>
+    <span></span>
+    </div>
+    </div>
+    <div class="panel-footer">
+    <input type="text" class="inputzaguess" id="sendMessage">
+    <button type="button" class="btn btn-primary">Guess</button>
+    </div>
+    </div>
+    </div>
+  </div>
+  <br>
+ <br>
+  <br>
+   <br>
+
+     </div>
+       <div class="col-sm-10">
+     <div class="chat">
+      <div class ="panel panel-default">
+      <div class="panel-heading">Chat</div>
+      <div class="panel-body">
+      <div class="chatlog">
+      <div class="row message-bubble">
+      <p class="text-muted"></p>
+      <span></span>
+      </div>
+      </div>
+      <div class="panel-footer">
+      <div class="input-group">
+      <input type="text" class="form-control" id="sendMessageChat" >
+      <span class="input-group-btn"><button class="btn btn-primary" id ="chatsend" type="button">Send</button>
+      </span>
+      </div>
+      </div>
+      </div>
+      </div>
+    </div>
+  </div>
+     </div>
+     </div>
+</template>
+
+<!-- 
+
+videti kako ovo ubacite a da ne glavi cetvrtu cetvrtinu
+<div class='counter'>{{getCountdown}}</div>
+
+
+
+    <div class="chat">
+      <div class ="panel panel-default">
+      <div class="panel-heading">Chat</div>
+      <div class="panel-body">
+      <div class="container">
+      <div class="row message-bubble">
+      <p class="text-muted">Jovan</p>
+      <span>Work?</span>
+      </div>
+      </div>
+      <div class="panel-footer">
+      <div class="input-group">
+      <input type="text" class="form-control" id="sendMessage" >
+      <span class="input-group-btn">
+      <button class="btn btn-default" id ="chatsend" type="button">Send</button>
+      </span>
+      </div>
+      </div>
+      </div>
+      </div>
+    </div>
+
+-->
+
+      
+  <template name="playerInfoInRoom">    
+        
+      <div class="userguess">   
+          <div class="pictureguess">    
+          <img src ="{{image}}" class="img-circle">   
+          </div>    
+            <div class="infoguess">   
+            <span class="room">User: </span>    
+           <span class="name">{{username}}</span> <br>    
+          <span class="players">Points: </span>   
+           <span class="prvideo">{{points}}</span>    
+          </div>    
+  </div>
+  </template>
