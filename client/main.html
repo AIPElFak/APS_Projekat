@@ -230,7 +230,7 @@
             <h4 class="modal-title">Create Game</h4>
           </div>
           <div class="modal-body">
-          <form class ="form-group createRoom" method="POST">
+          <form class ="form-group" method="POST">
            <label>Game Name</label>
            <input type ="text" name="game-name" class="form-control roomName"  placeholder="Game Name" maxlength="30" required="required">
            <label>Picture</label>
@@ -259,7 +259,7 @@
            <label>Password</label>
            <input type ="password" name="password" class="form-control passwordRoom" placeholder="Leave blank for public room" pattern=".{6,15}" title="6 characters minimum, 15 characters maximum">
            <br>
-           <input type="submit" value ="Create" class ="btn btn-primary">
+           <input type="button" value ="Create" class ="btn btn-primary createRoom">
           </form>
           </div>
           <div class="modal-footer">

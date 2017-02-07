@@ -438,7 +438,7 @@ if(Meteor.isClient)
 	    	
 	    },
 
-	    'submit .createRoom': function(event){
+	    'click .createRoom': function(event){
 	    	var roomName = $(".roomName").val();
 	    	var roomImage = $(".roomImage").val();
 	    	var maxPlayer = $(".maxPlayer").val();
@@ -446,27 +446,61 @@ if(Meteor.isClient)
 	    	var timeRound = $(".timeRound").val();
 	    	var passwordRoom = $(".passwordRoom").val();
 
-	    	//gameStatus oznacava da li je igra pocela ili ne 0-igra nije statovana 1-igra startovana
-
-	    	//roomType oznacava da li je soma private ili publuc, false-public, true-private
-
-	    	if(passwordRoom.length > 0)
+	    	if(roomName.length >= 6 && roomName.length <= 30)
 	    	{
-	    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: true, drawIdPlayer: Meteor.userId() });
-	    	}
+	    		if(maxPlayer >= 2 && maxPlayer <= 8)
+	    		{
+	    			if(numberRounds >= 1 && numberRounds <= 20)
+	    			{
+	    				if((passwordRoom.length >= 6 && passwordRoom.length <= 15) || passwordRoom.length == 0)
+	    				{
+					    	$("#closeModal").click();
 
-	    	else
-	    	{
-	    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: false, drawIdPlayer: Meteor.userId() });
-	    	}
+					    	//gameStatus oznacava da li je igra pocela ili ne 0-igra nije statovana 1-igra startovana
 
-	    	Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
+					    	//roomType oznacava da li je soma private ili publuc, false-public, true-private
 
-	    	Session.set("id_room",id_rly_1);
-	    	$(".createRoom").attr("action","/guess/"+id_rly_1);
-	    	Router.go('guess', {query: 'q=s'});
+					    	if(passwordRoom.length > 0)
+					    	{
+					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: true, drawIdPlayer: Meteor.userId() });
+					    	}
 
-	    	//window.location.href = "/guess/"+id_rly_1;
+					    	else
+					    	{
+					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: false, drawIdPlayer: Meteor.userId() });
+					    	}
+
+					    	Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
+
+					    	Session.set("id_room",id_rly_1);
+					    	/*$(".createRoom").attr("action","/guess/"+id_rly_1);
+					    	Router.go('guess', {query: 'q=s'});*/
+
+					    	window.location.href = "/guess/"+id_rly_1;
+					    }
+
+					    else
+					    {
+					    	sAlert.error('Password must be between 6 and 15 characters OR no password', {timeout: 2000, position: 'top'});
+					    }
+					}
+
+					else
+					{
+						sAlert.error('Number of Rounds must be between 1 and 20 characters', {timeout: 2000, position: 'top'});
+					}
+			    }
+
+			    else
+			    {
+			    	sAlert.error('Max player must be between 2 and 8 characters', {timeout: 2000, position: 'top'});
+			    }
+		    }
+
+		    else
+		    {
+		    	sAlert.error('Room name must be between 6 and 30 characters', {timeout: 2000, position: 'top'});
+		    }
 
 	    },
 
@@ -715,6 +749,8 @@ if(Meteor.isClient)
 
 				var boja;
 
+				//var ctx =  Session.get("ctx");	
+
 				for( p; p < query.pointsArray.length; p++ )
 		    	{
 		    		switch(query.pointsArray[p])
@@ -875,7 +911,8 @@ if(Meteor.isClient)
 	    function init() {		
 	        canvas = document.getElementById('can');		
 	        canvas1 = $( "#can" );		
-	        ctx = canvas.getContext("2d");		
+	        ctx = canvas.getContext("2d");	
+	        Session.set("ctx",ctx);	
 	        w = canvas.width;		
 	        h = canvas.height;		
 
@@ -992,7 +1029,7 @@ if(Meteor.isClient)
 	    		
 	    function findxy(res, e) {		
 	        if (res == 'down') {
-	        	interval = setInterval(insertPointsInToDB(), 100);
+	        	
 	            prevX = currX;		
 	            prevY = currY;		
 	            currX = e.clientX - position.left;		
@@ -1000,7 +1037,8 @@ if(Meteor.isClient)
 	    		
 	            flag = true;		
 	            dot_flag = true;		
-	            if (dot_flag) {		
+	            if (dot_flag) {
+	            	interval = setInterval(insertPointsInToDB(), 100);
 	                ctx.beginPath();		
 	                ctx.fillStyle = x;		
 	                ctx.fillRect(currX, currY, 2, 2);		
