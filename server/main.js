@@ -5,8 +5,9 @@ import { Accounts } from 'meteor/accounts-base';
 
 import '../imports/api/rooms.js';*/
 
-Posts = new Mongo.Collection('top_10');
-Comments = new Mongo.Collection('rooms');
+TopTen = new Mongo.Collection('top_10');
+Rooms = new Mongo.Collection('rooms');
+Words = new Mongo.Collection('words');
 
 Meteor.startup(() => {
 
@@ -45,4 +46,29 @@ Meteor.startup(() => {
  /*Accounts.config({
         sendVerificationEmail: true
     });*/
+
+
+	Meteor.methods({
+	  startGame: function (id_room_url_new) {
+
+			console.log('on server, startGame called');
+
+			var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
+
+			var random_number_for_word = Math.floor((Math.random() * 2));
+
+			var random_number_for_word_string = random_number_for_word.toString();
+
+			var word_string = Words.findOne({_id: random_number_for_word_string});
+
+			Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "1", "currentWord": word_string.word}});
+			//Session.set("word",word_string.word);
+
+			return his_room.drawIdPlayer;
+		
+	  },
+
+	});
+
+
 });
