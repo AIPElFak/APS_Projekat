@@ -4,9 +4,9 @@ U nastavku se nalazi kratak pregled projekta.
 
 
 ## Dokumentacija sadržaj:
-1. [Database](Database.md)
-2. [Behavioral](Behavioral.md)
-3. [Architecture](Architecture.md)
+1. [Database](Architecture/Database.md)
+2. [Behavioral](Architecture/Behavioral.md)
+3. [Architecture](Architecture/Architecture.md)
 
 
 ## Članovi tima:
