@@ -31,4 +31,4 @@ meteor add rocketchat:streamer<br/></b>
 
 
 <b>Pokretanje</b> projekta se vrši izvršenjem naredbe <b>meteor</b><br/>
-<b>Prekid</b> meteor programa izvršava se sa <b>Ctrl+C Ctrl+C</b>.
+<b>Prekid</b> meteor programa izvršava se u cmd sa <b>Ctrl+C, Ctrl+C</b>.
