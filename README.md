@@ -10,7 +10,7 @@ Projekat Sketcher će se baviti implementacijom popularne igre Pictionary, sa ma
 
 
 <h2>Instalacija i pokretanje projekta:</h2>
-Za pokretanje projekta neophodno je instalirati [Meteor.js](https://www.meteor.com/install)<br/>
+Za pokretanje projekta neophodno je instalirati <a href="https://www.meteor.com/install">Meteor.js</a> <br/>
 U folderu gde želimo instalirati projekat, navigiramo cmd:<br/>
 
 Kreirati novi projekat kucanjem naredve <b>meteor create myapp</b> (myapp je ime projekta koje možete promeniti)<br/>
