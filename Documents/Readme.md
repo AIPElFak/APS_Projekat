@@ -1,4 +1,14 @@
 # Sketcher
+
+U nastavku se nalazi kratak pregled projekta.
+
+
+## Dokumentacija sadržaj:
+1. [Database](Database.md)
+2. [Behavioral](Behavioral.md)
+3. [Architecture](Architecture.md)
+
+
 ## Članovi tima:
 14905 Nikola Stamenović</br>
 14928 Milan Stojanović</br>
