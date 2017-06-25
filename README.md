@@ -1,16 +1,16 @@
 <h1>Sketcher</h1>
 
 Projekat Sketcher će se baviti implementacijom popularne igre Pictionary, sa malo drugačijim pravilima.
-<h2>Pravila:</h2>
-1. Igrač koji je napravio sobu za igru je prvi koji crta proizvoljno izabrani termin (u daljem teksu crtač)
-2. Crtač ima određeno vreme koje je odabrano prilikom kreiranje sobe da termin približi ostalim igračima, igrač koji prvi pogodi termin postaje crtač u sledećoj rundi. 
-3. Igrač koji uspešno pogodi termin dobija poene, kao i crtač za uspešno objašnjavanje.
-4. U slučaju da igrači ne uspeju da pogode termin kažnjavaju se svi oduzimanjem poena, a crtač u narednoj rundi postaje proizvoljno odabrana osoba.
-5. Završetak igre je nakon poslednje runde (broj rundi je određen prilikom kreiranja sobe), pobednik je igrač koji ima najviše poena.
+<h2>Pravila:</h2> </br>
+1. Igrač koji je napravio sobu za igru je prvi koji crta proizvoljno izabrani termin (u daljem teksu crtač)</br>
+2. Crtač ima određeno vreme koje je odabrano prilikom kreiranje sobe da termin približi ostalim igračima, igrač koji prvi pogodi termin postaje crtač u sledećoj rundi.</br>
+3. Igrač koji uspešno pogodi termin dobija poene, kao i crtač za uspešno objašnjavanje.</br>
+4. U slučaju da igrači ne uspeju da pogode termin kažnjavaju se svi oduzimanjem poena, a crtač u narednoj rundi postaje proizvoljno odabrana osoba.</br>
+5. Završetak igre je nakon poslednje runde (broj rundi je određen prilikom kreiranja sobe), pobednik je igrač koji ima najviše poena.</br>
 
 
 <h2>Instalacija i pokretanje projekta:</h2>
-Za pokretanje projekta neophodno je instalirati [Meteor.js](https://www.meteor.com/install "Meteor.js installation")<br/>
+Za pokretanje projekta neophodno je instalirati [Meteor.js](https://www.meteor.com/install)<br/>
 U folderu gde želimo instalirati projekat, navigiramo cmd:<br/>
 
 Kreirati novi projekat kucanjem naredve <b>meteor create myapp</b> (myapp je ime projekta koje možete promeniti)<br/>
