@@ -6,6 +6,7 @@ Dokumentacija:
 
 Projekat:
 
+-disable events on cvans kada se zavrsi runda
 -nemogucnost crtanje i pogadjanja reci dok se igra ne startuje
 -igra se automacki startuje kada se u sobi nalazi max br igraca ili kada host startuje
 -kada se igra startuje bira se rec i inicijalizuje se tajmer runde

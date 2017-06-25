@@ -1,5 +1,7 @@
 //OBRATITI PAZNJU ZA APS PRILIKOM ISTOVREMENOG KLIKA ZA ULAZAK U SOBU!
 
+/* DA SE DISABLE EVENTI OD KVANS KADA PREDJE NA DRUGOG IGRACA */
+
 import { Template } from 'meteor/templating';
 
 /*import { TopTen } from '../imports/api/top_10.js';
@@ -42,6 +44,8 @@ const streamer = new Meteor.Streamer('chat');
 Session.set("firstTimeOnSite",0);
 
 Session.set("numberOfPoints",0);
+
+Session.set("gameStatus", "");
 
 var tipSobe = "All";
 var returnRooms = Rooms.find({gameStatus: "0"});
@@ -817,21 +821,8 @@ if(Meteor.isClient)
 			Session.set("drawIdPlayer",his_room.drawIdPlayer);
 
 			return his_room.drawIdPlayer;
-		}
-	});
-		
-	Template.guess.rendered = function() {		
-		//checkValidateData();
-	    if(!this._rendered) {		
-	      this._rendered = true;		
-	      console.log('Template onLoad');
-	      	
-	      //init();		
-	    }		
-	}
+		},
 
-
-	Template.guess.helpers({
 		haveStartButton: function(){
 			//ispitujemo da li igra nije startovana i da li je igrac admin
 			console.log("id_room_url: " + id_room_url);
@@ -861,11 +852,13 @@ if(Meteor.isClient)
 
 				if(room_query.drawIdPlayer == Meteor.userId())
 				{
+					console.log("vraca TRUE");
 					return true;
 				}
 
 				else
 				{
+					console.log("vraca FALSE");
 					var pen = document.getElementById("can");
 					pen.style.cursor = "default";
 					return false;
@@ -877,23 +870,124 @@ if(Meteor.isClient)
 			console.log("id_room_url: " + id_room_url);
 			var room_query = Rooms.findOne({_id: id_room_url});
 
+			console.log("gameStatus: " + Session.get("gameStatus"));
+
 			if(room_query)
 			{
-
-				if(room_query.gameStatus == "1")
+				if(Session.get("gameStatus") != "" && Session.get("gameStatus") != room_query.gameStatus)
 				{
-					//startujem tajmer
+					console.log("Usao IF");
+					Session.set("gameStatus", room_query.gameStatus);
+					if(room_query.gameStatus == "1")
+					{
+						//startujem tajmer
 
-					return true;
+						countdown.start(function() {
+
+							console.log("USAO KRAJ !!!");
+				    		clearInterval();
+				    		if(Meteor.userId() == Session.get("drawIdPlayer"))
+				    		{
+				    			//canvas = document.getElementById('can');
+
+				    			$("#can").off();
+
+					    		var id_room_url_new = Session.get("id_room_url");
+					    		var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
+					    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[1] } } );
+					    		arrya_points_draw = [];
+					    		//Rooms.update({_id: id_room_url_new}, {"pointsArray": [] } );
+					    		Session.set("drawIdPlayer",his_room.player_ids[1]);
+					    	}
+
+					        erase();
+
+					        $(".data-progress").removeAttr("style");
+
+					        $(".quad1").removeAttr("style");
+					        $(".quad2").removeAttr("style");
+					        $(".quad3").removeAttr("style");
+					        $(".quad4").removeAttr("style");
+
+					        $(".data-progress").attr("data-progress","0");
+
+					        console.log("ZAVRSIO KRAJ!!!");
+						});
+						console.log('vrati true');
+						return true;
+					}
+
+					else
+					{
+						console.log('vrati falseee');
+						return false;
+					}
 				}
 
-				else
+				else if(Session.get("gameStatus") == "")
 				{
-					return false;
+					console.log("usao else if");
+					Session.set("gameStatus", room_query.gameStatus);
+
+					if(room_query.gameStatus == "1")
+					{
+						//startujem tajmer
+
+						countdown.start(function() {
+							console.log("USAO KRAJ !!!");
+				    		clearInterval();
+				    		if(Meteor.userId() == Session.get("drawIdPlayer"))
+				    		{
+				    			$("#can").off();
+
+					    		var id_room_url_new = Session.get("id_room_url");
+					    		var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
+					    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[1] } } );
+					    		arrya_points_draw = [];
+					    		//Rooms.update({_id: id_room_url_new}, {"pointsArray": [] } );
+					    		Session.set("drawIdPlayer",his_room.player_ids[1]);
+
+					    		
+					    	}
+
+					        erase();
+
+					        $(".data-progress").removeAttr("style");
+
+					        $(".quad1").removeAttr("style");
+					        $(".quad2").removeAttr("style");
+					        $(".quad3").removeAttr("style");
+					        $(".quad4").removeAttr("style");
+
+					        $(".data-progress").attr("data-progress","0");
+
+					        console.log("ZAVRSIO KRAJ!!!");
+				    	
+						});
+						console.log('vrati true');
+						return true;
+					}
+
+					else
+					{
+						console.log('vrati falseee');
+						return false;
+					}
 				}
 			}
 		}
+		
 	});
+		
+	Template.guess.rendered = function() {		
+		//checkValidateData();
+	    if(!this._rendered) {		
+	      this._rendered = true;		
+	      console.log('Template onLoad');
+	      	
+	      //init();		
+	    }		
+	}
 
 	Template.guess.events({
 
@@ -1168,6 +1262,11 @@ if(Meteor.isClient)
 		        }, false);		
 		    }
 
+		    else
+		    {
+		    	$("#can").off();
+		    }
+
 		    	if(Session.get("firstTimeOnSite") == 0)
 		    	{
 		    		var p = Session.get("numberOfPoints");
@@ -1235,11 +1334,18 @@ if(Meteor.isClient)
 	    }		
 	    		
 	    function erase() {		
-	        var m = confirm("Want to clear");		
-	        if (m) {		
+	        /*var m = confirm("Want to clear");		
+	        if (m) {	*/	
+
+	        	canvas = document.getElementById('can');		
+	        canvas1 = $( "#can" );		
+	        ctx = canvas.getContext("2d");	
+	        Session.set("ctx",ctx);	
+	        w = canvas.width;		
+	        h = canvas.height;
 	            ctx.clearRect(0, 0, w, h);		
-	            document.getElementById("canvasimg").style.display = "none";		
-	        }		
+	            //document.getElementById("canvasimg").style.display = "none";		
+	        //}		
 	    }		
 	    		
 	    function save() {		
