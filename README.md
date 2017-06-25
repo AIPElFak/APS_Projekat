@@ -1,7 +1,7 @@
 <h1>Sketcher</h1>
 
 Projekat Sketcher će se baviti implementacijom popularne igre Pictionary, sa malo drugačijim pravilima.
-<h2>Pravila:</h2> </br>
+<h2>Pravila:</h2>
 1. Igrač koji je napravio sobu za igru je prvi koji crta proizvoljno izabrani termin (u daljem teksu crtač)</br>
 2. Crtač ima određeno vreme koje je odabrano prilikom kreiranje sobe da termin približi ostalim igračima, igrač koji prvi pogodi termin postaje crtač u sledećoj rundi.</br>
 3. Igrač koji uspešno pogodi termin dobija poene, kao i crtač za uspešno objašnjavanje.</br>
