@@ -1,7 +1,9 @@
-<h1>Sketcher</h1>
+# Sketcher
 
 Projekat Sketcher će se baviti implementacijom popularne igre Pictionary, sa malo drugačijim pravilima.
-<h2>Pravila:</h2>
+
+
+## Pravila:
 1. Igrač koji je napravio sobu za igru je prvi koji crta proizvoljno izabrani termin (u daljem teksu crtač)</br>
 2. Crtač ima određeno vreme koje je odabrano prilikom kreiranje sobe da termin približi ostalim igračima, igrač koji prvi pogodi termin postaje crtač u sledećoj rundi.</br>
 3. Igrač koji uspešno pogodi termin dobija poene, kao i crtač za uspešno objašnjavanje.</br>
@@ -9,7 +11,10 @@ Projekat Sketcher će se baviti implementacijom popularne igre Pictionary, sa ma
 5. Završetak igre je nakon poslednje runde (broj rundi je određen prilikom kreiranja sobe), pobednik je igrač koji ima najviše poena.</br>
 
 
-<h2>Instalacija i pokretanje projekta:</h2>
+## Dokumentacija:
+[Dokumentacija indeks](/Documents/Readme.md)
+
+## Instalacija i pokretanje projekta:
 Za pokretanje projekta neophodno je instalirati <a href="https://www.meteor.com/install">Meteor.js</a> <br/>
 U folderu gde želimo instalirati projekat, navigiramo cmd:<br/>
 
