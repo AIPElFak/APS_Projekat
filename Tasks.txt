@@ -1,4 +1,10 @@
-STA JE OSTALO DA SE ODRADI:
+Dokumentacija:
+-Dodavanje reči, vidi kako ćeš to, da li kao skriptu ili ne
+-Bihevirialni UML
+-Modeli
+
+
+Projekat:
 
 -nemogucnost crtanje i pogadjanja reci dok se igra ne startuje
 -igra se automacki startuje kada se u sobi nalazi max br igraca ili kada host startuje
