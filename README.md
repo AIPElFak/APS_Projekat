@@ -15,6 +15,7 @@ Projekat Sketcher će se baviti implementacijom popularne igre Pictionary, sa ma
 [Dokumentacija indeks](/Documents/Readme.md)
 
 ## Instalacija i pokretanje projekta:
+#### Napomena: Neophodno je oko sat vremena za pokretanje projekta
 Za pokretanje projekta neophodno je instalirati <a href="https://www.meteor.com/install">Meteor.js</a> <br/>
 U folderu gde želimo instalirati projekat, navigiramo cmd:<br/>
 
