@@ -6,10 +6,9 @@ Dokumentacija:
 
 Projekat:
 
--izbor sledeceg igraca ako niko nije pogodio rec, kada istekne vreme
--disable events on cvans kada se zavrsi runda
--nemogucnost crtanje i pogadjanja reci dok se igra ne startuje
--igra se automacki startuje kada se u sobi nalazi max br igraca ili kada host startuje
--kada se igra startuje bira se rec i inicijalizuje se tajmer runde
 -kada tajmer odbroji do kraja a niko nije pogodio rec daju se negativni bodovi ovome ko je crtao i neki procenat od toga ovima koji su pogadjali, prikazuje se rec koja je trebala da se pogodi i eventulano izgubljeni bodovi za tu rundu i ako je poslednja ukupna skor tabela, ako je runda poslednja izlazi se iz igre automacki nakon neko vreme ili clickom na exit, ako nije poslednja bira se sl igrac koji ce da crta
 -prilikom pogadjanja reci, treeba ispitivati da li je rec pogodjena, ukoliko jeste, prekida se runda i radi se sito kao i da je vreme isteklo stim da ovaj koji je pogodio rec on sada crta i dobija pozitivne poene kaoi neki procenat ovaj sto je crtao....
+
+NAPOMENA:
+
+-igru uvek startuje igrac koji treba da crta
