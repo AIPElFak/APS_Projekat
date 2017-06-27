@@ -25,6 +25,7 @@ Zatim odraditi sledeću naredbu <b>meteor npm install</b><br/>
 
 Prekopirati Sketcher projekat u novo-napravljeni projekat.<br/>
 U pokrenutom cmd-u u lokaciji projekta, izvršiti sledeći niz naredbi radi instaliranja neophodnih paketa:<br/>
+* Pro tip: Prekopirajte sve naredbe i nalepite ih u cmd, on će ih sukcesivno instalirati<br/>
 <b>meteor add twbs:bootstrap<br/>
 meteor add iron:router<br/>
 meteor add fortawesome:fontawesome<br/>
@@ -33,7 +34,13 @@ meteor add session<br/>
 meteor add service-configuration<br/>
 meteor add accounts-password<br/>
 meteor add flyandi:reactive-countdown<br/>
-meteor add rocketchat:streamer<br/></b>
+meteor add rocketchat:streamer<br/>
+meteor add jquery<br/>
+meteor add fortawesome:fontawesome<br/>
+meteor add themeteorchef:bert<br/>
+meteor add accounts-facebook<br/>
+meteor add accounts-google<br/></b>
+
 
 
 <b>Pokretanje</b> projekta se vrši izvršenjem naredbe <b>meteor</b><br/>
