@@ -1075,6 +1075,11 @@ if(Meteor.isClient)
 
 		'click #chatsend': function(event){
 
+			$('#myModal').modal({
+			    backdrop: 'static',
+			    keyboard: false
+			})
+
 			var message = $('#sendMessageChat').val();
 			var currentUser = Meteor.userId();
 			var his_room = Rooms.findOne({_id: id_room_url, player_ids: currentUser});

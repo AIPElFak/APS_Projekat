@@ -355,6 +355,32 @@
 
 
 <template name="guess">
+
+<!-- Model koji ce da sadrzi sve sto se tice poena ko je koliko osvoji i tajmer za pocetak sledece runde -->
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+            <div class="test">
+                <h4 class="modal-title">Informations about the game:</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+              <h3>List of all players and their points</h3>
+              <h3>Last Word:</h3>
+              <h3>Guessed it</h3>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+   
+
+
  <div class="col-sm-2">
    <div class="well">
      <div class="allusers">
@@ -474,16 +500,12 @@
       <div class="chatlog">
         <div class="messages">
             {{#each messages}}
-            {{currentUser.username}}<b>: :</b>
-            {{roomName}}
-
               <div class="message-line {{type}}">
                 <div class="message">
                   {{#if user}}
                     <b>{{user}} :</b>
                   {{/if}}
                   {{text}}
-                     {{messages.test}}
                 </div>
               </div>
             {{/each}}

@@ -657,3 +657,10 @@ margin-left: 20px;
     .col-11 {width: 91.66%;}
     .col-12 {width: 100%;}
 }
+
+
+.modal-header
+{
+	  background-color: #5cb85c !important;
+      color:white !important;
+}
