@@ -19,8 +19,9 @@ import './main.html';
 
 //biram vreme
 
+//var maxcounter;
 
-
+countdown = new ReactiveCountdown();
 
 	var canvas, canvas1, ctx, flag = false,		
 	        prevX = 0,		
@@ -237,7 +238,6 @@ if(Meteor.isClient)
 {
 	/*Meteor.logout();
 	console.log(Meteor.userId());*/
-	console.log(Meteor.userId());
 
 	//Froma za registraciju
 	Template.register.events({
@@ -455,7 +455,7 @@ if(Meteor.isClient)
 					    	Session.set("id_room",id_rly_1);
 					    	/*$(".createRoom").attr("action","/guess/"+id_rly_1);
 					    	Router.go('guess', {query: 'q=s'});*/
-
+					    	//Session.set("maxcounter",timeRound);
 					    	window.location.href = "/guess/"+id_rly_1;
 					    }
 
@@ -542,6 +542,8 @@ if(Meteor.isClient)
 	    	var max_player = room_tmp.maxPlayer;
 
 	    	var trenutno_player = room_tmp.player_ids.length;
+
+	    	//Session.set("maxcounter",room_tmp.timeRound);
 
 	    	if( max_player == (trenutno_player + 1) )
 	    	{
@@ -690,16 +692,11 @@ if(Meteor.isClient)
 		    console.log('me: ' + message);
 		 },
 
-	  	getCountdown: function(){
-			return countdown.get();
-		},
-
 		playersInfoInRoom: function(){
 			var jsonObj = [];
 
 			var allUsersInRoom = Rooms.findOne({_id: Session.get("id_room_url")});
 
-			console.log(i);
 			i++;
 
 			console.log("AHA: " + allUsersInRoom);
@@ -825,7 +822,6 @@ if(Meteor.isClient)
 
 		haveStartButton: function(){
 			//ispitujemo da li igra nije startovana i da li je igrac admin
-			console.log("id_room_url: " + id_room_url);
 			var room_query = Rooms.findOne({_id: id_room_url});
 
 			if(room_query)
@@ -852,13 +848,11 @@ if(Meteor.isClient)
 
 				if(room_query.drawIdPlayer == Meteor.userId())
 				{
-					console.log("vraca TRUE");
 					return true;
 				}
 
 				else
 				{
-					console.log("vraca FALSE");
 					var pen = document.getElementById("can");
 					pen.style.cursor = "default";
 					return false;
@@ -866,38 +860,64 @@ if(Meteor.isClient)
 			}
 		},
 
-		isGameStarted: function(){
-			console.log("id_room_url: " + id_room_url);
-			var room_query = Rooms.findOne({_id: id_room_url});
 
-			console.log("gameStatus: " + Session.get("gameStatus"));
+		isGameStarted: function(){
+			var room_query = Rooms.findOne({_id: id_room_url});
 
 			if(room_query)
 			{
 				if(Session.get("gameStatus") != "" && Session.get("gameStatus") != room_query.gameStatus)
 				{
-					console.log("Usao IF");
 					Session.set("gameStatus", room_query.gameStatus);
 					if(room_query.gameStatus == "1")
 					{
+
+						countdown = new ReactiveCountdown(room_query.timeRound,
+						{
+							//posle svakog tika radi nesto
+							tick: function() 
+							{
+								var firstquad = room_query.timeRound/4;
+								var secnd = room_query.timeRound/2;
+								var thirdquad = (room_query.timeRound*3)/4;
+								crtanje(room_query.timeRound, firstquad, secnd, thirdquad);
+							}
+
+						});
 						//startujem tajmer
 
 						countdown.start(function() {
 
-							console.log("USAO KRAJ !!!");
 				    		clearInterval();
 				    		if(Meteor.userId() == Session.get("drawIdPlayer"))
 				    		{
-				    			//canvas = document.getElementById('can');
 
 				    			$("#can").off();
 
 					    		var id_room_url_new = Session.get("id_room_url");
 					    		var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
-					    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[1] } } );
+
+					    		var index_next_player = 0;
+
+					    		for(var i = 0; i < his_room.player_ids.length; i++)
+					    		{
+					    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
+					    			{
+					    				index_next_player = i + 1;
+
+					    				if(index_next_player == his_room.player_ids.length)
+					    				{
+					    					index_next_player = 0;
+					    				}
+
+					    				break;
+					    			}
+					    		}
+
+					    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[index_next_player] } } );
 					    		arrya_points_draw = [];
 					    		//Rooms.update({_id: id_room_url_new}, {"pointsArray": [] } );
-					    		Session.set("drawIdPlayer",his_room.player_ids[1]);
+					    		Session.set("drawIdPlayer",his_room.player_ids[index_next_player]);
 					    	}
 
 					        erase();
@@ -911,7 +931,6 @@ if(Meteor.isClient)
 
 					        $(".data-progress").attr("data-progress","0");
 
-					        console.log("ZAVRSIO KRAJ!!!");
 						});
 						console.log('vrati true');
 						return true;
@@ -926,27 +945,60 @@ if(Meteor.isClient)
 
 				else if(Session.get("gameStatus") == "")
 				{
-					console.log("usao else if");
 					Session.set("gameStatus", room_query.gameStatus);
 
 					if(room_query.gameStatus == "1")
 					{
+						countdown = new ReactiveCountdown(room_query.timeRound,
+						{
+							//posle svakog tika radi nesto
+							tick: function() 
+							{
+								var firstquad = room_query.timeRound/4;
+								var secnd = room_query.timeRound/2;
+								var thirdquad = (room_query.timeRound*3)/4;
+								crtanje(room_query.timeRound, firstquad, secnd, thirdquad);
+							}
+
+						});
+
 						//startujem tajmer
 
 						countdown.start(function() {
-							console.log("USAO KRAJ !!!");
+							
+							//kada istekne vreme sta se radi
+
 				    		clearInterval();
+
+				    		//igrac koji je crtao menja game status na 2, postavlja sledeceg igraca koji pokazuje rec i brise tacke iz baze
 				    		if(Meteor.userId() == Session.get("drawIdPlayer"))
 				    		{
 				    			$("#can").off();
 
 					    		var id_room_url_new = Session.get("id_room_url");
 					    		var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
-					    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[1] } } );
+
+					    		var index_next_player = 0;
+
+					    		for(var i = 0; i < his_room.player_ids.length; i++)
+					    		{
+					    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
+					    			{
+					    				index_next_player = i + 1;
+
+					    				if(index_next_player == his_room.player_ids.length)
+					    				{
+					    					index_next_player = 0;
+					    				}
+
+					    				break;
+					    			}
+					    		}
+
+					    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[index_next_player] } } );
 					    		arrya_points_draw = [];
 					    		//Rooms.update({_id: id_room_url_new}, {"pointsArray": [] } );
-					    		Session.set("drawIdPlayer",his_room.player_ids[1]);
-
+					    		Session.set("drawIdPlayer",his_room.player_ids[index_next_player]);
 					    		
 					    	}
 
@@ -960,8 +1012,6 @@ if(Meteor.isClient)
 					        $(".quad4").removeAttr("style");
 
 					        $(".data-progress").attr("data-progress","0");
-
-					        console.log("ZAVRSIO KRAJ!!!");
 				    	
 						});
 						console.log('vrati true');
@@ -973,6 +1023,15 @@ if(Meteor.isClient)
 						console.log('vrati falseee');
 						return false;
 					}
+				}
+
+				else
+				{
+					if(room_query.gameStatus == "1")
+						return true;
+
+					else
+						return false;
 				}
 			}
 		}
@@ -994,9 +1053,11 @@ if(Meteor.isClient)
 		'click #start': function(event){
 
 			Meteor.call('startGame',Session.get("id_room_url") ,function(err, response) {
-				console.log('UDJESLIBRE');
 				console.log(response);
 				Session.set("drawIdPlayer",response);
+
+				//stavljam da ima pen u ruku da se ne bi desio bug
+				$("#penblack").click();
 				init();
 			});
 
@@ -1005,21 +1066,6 @@ if(Meteor.isClient)
 
 		'click #guessButton': function(event){
 
-			/*countdown.start(function() {
-
-	    		clearInterval();
-			});*/
-
-
-			/*var id_room_url_new = Session.get("id_room_url");
-
-			var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
-
-			Rooms.update({_id: id_room_url_new}, {$set: {"drawIdPlayer": his_room.player_ids[1]}});
-
-			Session.set("drawIdPlayer",his_room.drawIdPlayer);
-
-			init();*/
 			var message_client = $("#sendMessage").val().toLowerCase();
 
 			if(message_client != "")
@@ -1248,18 +1294,21 @@ if(Meteor.isClient)
 			
 	    	if(Meteor.userId() == Session.get("drawIdPlayer"))
 	    	{	
-		        canvas.addEventListener("mousemove", function (event) {		
-		            findxy('move', event)		
-		        }, false);		
-		        canvas.addEventListener("mousedown", function (event) {		
-		            findxy('down', event)		
-		        }, false);		
-		        canvas.addEventListener("mouseup", function (event) {		
-		            findxy('up', event)		
-		        }, false);		
-		        canvas.addEventListener("mouseout", function (event) {		
-		            findxy('out', event)		
-		        }, false);		
+	    		$('#can').on("mousemove", function(event) {
+	    			findxy('move', event)
+	    		});
+
+	    		$('#can').on("mousedown", function(event) {
+	    			findxy('down', event)
+	    		});
+
+	    		$('#can').on("mouseup", function(event) {
+	    			findxy('up', event)
+	    		});
+
+	    		$('#can').on("mouseout", function(event) {
+	    			findxy('out', event)
+	    		});
 		    }
 
 		    else
@@ -1354,7 +1403,8 @@ if(Meteor.isClient)
 	        document.getElementById("canvasimg").src = dataURL;		
 	        document.getElementById("canvasimg").style.display = "inline";		
 	    }		
-	    		
+	    
+
 	    function findxy(res, e) {		
 	        if (res == 'down') {
 	        	
@@ -1414,39 +1464,9 @@ if(Meteor.isClient)
 
 //------------------------------END---------------------------------------
 
-/*var maxcounter = 10;
-var firstquad = maxcounter/4;
-var secnd =maxcounter/2;
-var thirdquad = (maxcounter*3)/4;
+crtanje = function(maxcounter, firstquad, secnd, thirdquad){
 
-var countdown = new ReactiveCountdown(maxcounter,
-
-	{
-		//posle svakog tika radi nesto
-		tick: function() 
-		{
-			crtanje();
-		}
-
-	});*/
-
-var maxcounter = 10;
-var firstquad = maxcounter/4;
-var secnd =maxcounter/2;
-var thirdquad = (maxcounter*3)/4;
-
-
-var countdown = new ReactiveCountdown(maxcounter,
-{
-	//posle svakog tika radi nesto
-	tick: function() 
-	{
-		crtanje();
-	}
-
-});
-
-crtanje = function(){
+	console.log(firstquad + " _> " + secnd + " _> " + thirdquad);
 
 	var progressbar = document.querySelector('div[data-progress]'),
 	quad1 = document.querySelector('.quad1'),
