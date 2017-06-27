@@ -48,6 +48,10 @@ Meteor.startup(() => {
     });*/
 
 
+const streamer = new Meteor.Streamer('chat');
+streamer.allowRead('all');
+streamer.allowWrite('all');
+
 	Meteor.methods({
 	  startGame: function (id_room_url_new) {
 

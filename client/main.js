@@ -11,11 +11,11 @@ import { Rooms } from '../imports/api/rooms.js';*/
 TopTen = new Mongo.Collection('top_10');
 Rooms = new Mongo.Collection('rooms');
 Words = new Mongo.Collection('words');
-
+const messages = new Mongo.Collection(null);
 import { ReactiveVar } from 'meteor/reactive-var';
 
 
-import './main.html';
+
 
 //biram vreme
 
@@ -687,10 +687,15 @@ if(Meteor.isClient)
 
 	Template.guess.helpers({
 
-		chatsend: function(message) {
-		    streamer.emit('message', message);
-		    console.log('me: ' + message);
-		 },
+		roomName(){
+				var currentUser = Meteor.userId();
+			var his_room = Rooms.findOne({_id: id_room_url, player_ids: currentUser});
+			return his_room.name;
+		},
+
+		messages() {
+			return messages.find();
+		},
 
 		playersInfoInRoom: function(){
 			var jsonObj = [];
@@ -831,7 +836,6 @@ if(Meteor.isClient)
 				{
 					return true;
 				}
-
 				else
 				{
 					return false;
@@ -1043,6 +1047,11 @@ if(Meteor.isClient)
 	    if(!this._rendered) {		
 	      this._rendered = true;		
 	      console.log('Template onLoad');
+
+
+	      //chat mozda ce trebati da se pomeri negde drugde ali to jos treba da se vidi
+
+
 	      	
 	      //init();		
 	    }		
@@ -1061,6 +1070,35 @@ if(Meteor.isClient)
 				init();
 			});
 
+
+		},
+
+		'click #chatsend': function(event){
+
+			var message = $('#sendMessageChat').val();
+			var currentUser = Meteor.userId();
+			var his_room = Rooms.findOne({_id: id_room_url, player_ids: currentUser});
+			var room = Rooms.findOne({_id: Session.get("id_room_url")});
+
+		
+			sendMessage = function(text) {
+				streamer.emit('message', {
+					type: 'user',
+					user: Meteor.user() ? Meteor.user().username : 'anonymous',
+					text: text
+				});
+				messages.insert({
+					type: 'self',
+					text: Meteor.user().username + ' : ' + text
+				});
+			};
+
+			streamer.on('message', function(message) {
+				messages.insert(message);
+			});
+			
+			sendMessage(message);
+			$("#sendMessageChat").val("");
 
 		},
 
@@ -1174,17 +1212,6 @@ if(Meteor.isClient)
 		}
 
 	});
-
-	
-
-	 sendMessage = function(message) {
-    streamer.emit('message', message);
-    console.log('me: ' + message);
-  };
-
-  streamer.on('message', function(message) {
-    console.log('user: ' + message);
-  });
 
 }
 

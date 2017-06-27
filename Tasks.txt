@@ -6,6 +6,7 @@ Dokumentacija:
 
 Projekat:
 
+-izbor sledeceg igraca ako niko nije pogodio rec, kada istekne vreme
 -disable events on cvans kada se zavrsi runda
 -nemogucnost crtanje i pogadjanja reci dok se igra ne startuje
 -igra se automacki startuje kada se u sobi nalazi max br igraca ili kada host startuje

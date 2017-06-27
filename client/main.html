@@ -472,10 +472,22 @@
     <div class="panel-heading">Chat</div>
     <div class="panel-body">
       <div class="chatlog">
-        <div class="row message-bubble">
-          <p class="text-muted"></p>
-          <span></span>
-        </div>
+        <div class="messages">
+            {{#each messages}}
+            {{currentUser.username}}<b>: :</b>
+            {{roomName}}
+
+              <div class="message-line {{type}}">
+                <div class="message">
+                  {{#if user}}
+                    <b>{{user}} :</b>
+                  {{/if}}
+                  {{text}}
+                     {{messages.test}}
+                </div>
+              </div>
+            {{/each}}
+          </div>
       </div>
       <div class="panel-footer">
         <div class="input-group">
