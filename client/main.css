@@ -458,6 +458,7 @@ ul.thumbnails.image_picker_selector li .thumbnail.selected
 .chatlog
 {
 	height: 100px;
+	overflow: auto;
 }
 #sendMessage
 {
