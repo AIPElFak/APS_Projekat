@@ -11,6 +11,8 @@ Words = new Mongo.Collection('words');
 
 Meteor.startup(() => {
 
+	console.log(Words.find().count());
+
 	ServiceConfiguration.configurations.upsert({
   	service: "facebook"
 	}, {
@@ -60,7 +62,7 @@ streamer.allowWrite('all');
 
 			var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
 
-			var random_number_for_word = Math.floor((Math.random() * 2));
+			var random_number_for_word = Math.floor((Math.random() * Words.find().count()));
 
 			var random_number_for_word_string = random_number_for_word.toString();
 

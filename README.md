@@ -15,33 +15,9 @@ Projekat Sketcher će se baviti implementacijom popularne igre Pictionary, sa ma
 [Dokumentacija indeks](/Documents/Readme.md)
 
 ## Instalacija i pokretanje projekta:
-#### Napomena: Neophodno je oko sat vremena za pokretanje projekta
 Za pokretanje projekta neophodno je instalirati <a href="https://www.meteor.com/install">Meteor.js</a> <br/>
-U folderu gde želimo instalirati projekat, navigiramo cmd:<br/>
-
-Kreirati novi projekat kucanjem naredve <b>meteor create myapp</b> (myapp je ime projekta koje možete promeniti)<br/>
-Pozicionirati se u novi folder <b>cd myapp</b><br/>
-Zatim odraditi sledeću naredbu <b>meteor npm install</b><br/>
-
-Prekopirati Sketcher projekat u novo-napravljeni projekat.<br/>
-U pokrenutom cmd-u u lokaciji projekta, izvršiti sledeći niz naredbi radi instaliranja neophodnih paketa:<br/>
-* Pro tip: Prekopirajte sve naredbe i nalepite ih u cmd, on će ih sukcesivno instalirati<br/>
-<b>meteor add twbs:bootstrap<br/>
-meteor add iron:router<br/>
-meteor add fortawesome:fontawesome<br/>
-meteor add juliancwirko:s-alert<br/>
-meteor add session<br/>
-meteor add service-configuration<br/>
-meteor add accounts-password<br/>
-meteor add flyandi:reactive-countdown<br/>
-meteor add rocketchat:streamer<br/>
-meteor add jquery<br/>
-meteor add fortawesome:fontawesome<br/>
-meteor add themeteorchef:bert<br/>
-meteor add accounts-facebook<br/>
-meteor add accounts-google<br/></b>
-
-
+Skinuti projekat sa Git-a, navigirati cmd u skinutom folderu.<br/>
 
 <b>Pokretanje</b> projekta se vrši izvršenjem naredbe <b>meteor</b><br/>
+Možda će biti neophodno odraditi <b>meteor update</b> ili bilo koja meteor komanda koju preporuči zapis greške prilikom pokretanja. <br/>
 <b>Prekid</b> meteor programa izvršava se u cmd sa <b>Ctrl+C, Ctrl+C</b>.
