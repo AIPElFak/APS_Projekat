@@ -682,10 +682,22 @@ if(Meteor.isClient)
 
 	Template.guess.helpers({
 
+		checkRoomName: function(name1, name2)
+		{
+			for(i=0; i < name1.length; i++)
+			{
+			if(name1[i] === name2)
+			{
+				return true;
+				
+			}
+			}
+			return false;
+		},
+
 		roomName(){
-				var currentUser = Meteor.userId();
-			var his_room = Rooms.findOne({_id: id_room_url, player_ids: currentUser});
-			return his_room.name;
+			var room = Rooms.findOne({_id: Session.get("id_room_url")});
+			return room.player_ids;
 		},
 
 		messages() {
@@ -1391,19 +1403,28 @@ if(Meteor.isClient)
 			var message = $('#sendMessageChat').val();
 			var currentUser = Meteor.userId();
 			var his_room = Rooms.findOne({_id: id_room_url, player_ids: currentUser});
-			var room = Rooms.findOne({_id: Session.get("id_room_url")});
-
+			var usersInfo = Meteor.users.findOne({_id: currentUser})
+			console.log(Meteor.userId());
+			console.log(his_room);
 		
 			sendMessage = function(text) {
 				streamer.emit('message', {
 					type: 'user',
 					user: Meteor.user() ? Meteor.user().username : 'anonymous',
-					text: text
+					text: text,
+					name: currentUser,
+					img: usersInfo.profile.avatar
+
 				});
 				messages.insert({
 					type: 'self',
-					text: Meteor.user().username + ' : ' + text
+					user:  Meteor.user().username,
+					text: text,
+					name: currentUser,
+					img: usersInfo.profile.avatar
 				});
+
+				test: his_room.name;
 			};
 
 			streamer.on('message', function(message) {
@@ -1432,7 +1453,7 @@ if(Meteor.isClient)
 				if(rec == message_client)
 				{
 					//pogodjena rec, obavesti server
-					$(".rowmessage-bubble").append("<p class='text-muted'>****** Pogodjena rec ******</p>");
+					$(".rowmessage-bubble").append("<p class='text-muted' style='color:green;'>* Pogodjena rec *</p>");
 
 					Rooms.update({_id: id_room_url_new}, {$set: { "gameStatus": "3", "winPlayer": Meteor.userId() } } );
 
@@ -1443,7 +1464,7 @@ if(Meteor.isClient)
 
 				else
 				{
-					$(".rowmessage-bubble").append("<p class='text-muted'>****** Pogresna rec ******</p>");
+					$(".rowmessage-bubble").append("<p class='text-muted' style='color:red;'>* Pogresna rec *</p>");
 					console.log("NIJE");
 				}
 

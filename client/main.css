@@ -155,6 +155,26 @@ form
 	margin: 0px;
 	color: #337ab7;
 }
+
+.user1
+{
+	float: left;
+		font-family: "Roboto";
+}
+.message
+{
+	padding-left: 5px;
+}
+.poruka
+{
+	max-width: 943px;
+}
+.txt
+{
+	font-family: "Roboto";
+	font-weight: 400;
+	margin-bottom: 1px;
+}
 .buttons 
 {
 	margin-top: 10px;
@@ -454,6 +474,7 @@ ul.thumbnails.image_picker_selector li .thumbnail.selected
 .log
 {
 	height: 300px;
+	overflow: 	auto;
 }
 .chatlog
 {
@@ -498,10 +519,20 @@ table th
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
 }
+.icon img
+{
+	border-radius: 	20px;
+}
 
 .timer
 {
-	margin-right: 17px;
+	
+		margin-right: 17px;
+  		
+	 background: url("blue-clock-icon.png") no-repeat;
+	 background-size: 141px 139px; 
+	 height: 139px;
+	 background-position: -7px -15px;
 }
 .data-progress {
   box-sizing: border-box;
@@ -514,6 +545,17 @@ table th
   transition: all 1s;
   overflow: hidden;
 
+}
+.rowmessage-bubble
+{
+  overflow: auto;
+}
+.text-muted
+{
+	font-weight: 400;
+	font-family: "Roboto";
+	padding-left: 5px;
+	margin-bottom: 0xp
 }
 .counter {
   position: absolute;
@@ -664,3 +706,4 @@ margin-left: 20px;
 	  background-color: #5cb85c !important;
       color:white !important;
 }
+
