@@ -21,5 +21,3 @@ Skinuti projekat sa Git-a, navigirati cmd u skinutom folderu.<br/>
 <b>Pokretanje</b> projekta se vrši izvršenjem naredbe <b>meteor</b><br/>
 Možda će biti neophodno odraditi <b>meteor update</b> ili bilo koja meteor komanda koju preporuči zapis greške prilikom pokretanja. <br/>
 <b>Prekid</b> meteor programa izvršava se u cmd sa <b>Ctrl+C, Ctrl+C</b>. <br/>
-<b>Inicijalizacija baze</b> se izvršava pozivanjem skripte u novom cmd-u pozicioniranom u folderu komandom <b>meteor mongo<skripta_za_bazu.txt</b> <br/>
-Za inicijalizaciju baze, neophodno je da je meteor pokrenut! <br/>
