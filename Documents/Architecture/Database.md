@@ -17,7 +17,7 @@ U nastavku je pregled podataka koje čuvamo u bazi.
 | 6   | passwordRoom       | Password sobe |
 | 7   | player_ids       | Niz ID-eva igrača       |
 | 8   | player_points       | Niz broja poena igrača       |
-| 9   | roomType       | Da li je suba javna ili privatna       |
+| 9   | roomType       | Da li je soba javna ili privatna       |
 | 10   | drawIdPlayer       | ID crtača       |
 | 11   | pointsArray       | Niz kodiranih tačaka        |
 | 12   | gameStatus       | 0: igra nije počela; 1: igra je počela; 2: Završila se partija        |
