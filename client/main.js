@@ -1275,7 +1275,7 @@ if(Meteor.isClient)
 				if(rec == message_client)
 				{
 					//pogodjena rec, obavesti server
-					$(".rowmessage-bubble").append("<p class='text-muted'>****** Pogodjena rec ******</p>");
+					$(".rowmessage-bubble").append("<p class='text-muted' style='color:green;'>* Pogodjena rec *</p>");
 
 					Rooms.update({_id: id_room_url_new}, {$set: { "gameStatus": "3" } } );
 
@@ -1284,7 +1284,7 @@ if(Meteor.isClient)
 
 				else
 				{
-					$(".rowmessage-bubble").append("<p class='text-muted'>****** Pogresna rec ******</p>");
+					$(".rowmessage-bubble").append("<p class='text-muted' style='color:red;'>* Pogresna rec *</p>");
 					console.log("NIJE");
 				}
 
