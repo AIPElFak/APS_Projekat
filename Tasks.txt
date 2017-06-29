@@ -21,5 +21,8 @@ Bagovi:
 -Kada se smanji rezolucija prozora, loše se uzimaju koordinate za crtanje (JOCA)
 
 
+NA KRAJU POBRISATI PAKETE KOJE NE KORISTIMO!
+autopublish bi takođe trebalo da obrišemo, jer celu bazu stavlja na videlo klijentu, što nije dobro niti pametno
+
 Funkcionalnosti:
 <b> Snimanje sobe! <b/>
