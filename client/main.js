@@ -11,6 +11,8 @@ import { Rooms } from '../imports/api/rooms.js';*/
 TopTen = new Mongo.Collection('top_10');
 Rooms = new Mongo.Collection('rooms');
 Words = new Mongo.Collection('words');
+SaveRooms = new Mongo.Collection('save_rooms');
+
 const messages = new Mongo.Collection(null);
 import { ReactiveVar } from 'meteor/reactive-var';
 
@@ -46,8 +48,9 @@ Session.set("gameStatus", "");
 
 Session.set("numberRounds", 0); //nijedna runda nije odigrana
 
-var tipSobe = "All";
+var tipSobe = "Public";
 var returnRooms = Rooms.find({gameStatus: "0"});
+
 
 var id_room;
 var id_rly_1;
@@ -310,52 +313,8 @@ if(Meteor.isClient)
 			        Router.go('loby');
 			    }
 			});
-	    },
-	    'click .facebookLogin': function(event){
-
-	    	Meteor.loginWithFacebook({
-			  requestPermissions: ['user_friends', 'public_profile', 'email']
-			}, (err) => {
-			  if (err) {
-			    // handle error
-			    $("#errorLogin").html("<p style='color:red;'>"+err.reason+"</p>");
-			  } else {
-			    // successful login!
-			    Router.go('loby');
-			  }
-			});
-	    },
-
-	    'click .googleLogin': function(event){
-
-	    	//Meteor.loginWithGoogle();
-	    	Meteor.loginWithGoogle({
-			  requestPermissions: ['email']
-			}, (err) => {
-			  if (err) {
-			    // handle error
-			    $("#errorLogin").html("<p style='color:red;'>"+err.reason+"</p>");
-			  } else {
-			    // successful login!
-			    Router.go('loby');
-			  }
-			});
-	    },
-
-	    'click .twitterLogin': function(event){
-
-	    	Meteor.loginWithTwitter({
-			  requestPermissions: ['user_friends', 'public_profile', 'email']
-			}, (err) => {
-			  if (err) {
-			    // handle error
-			    $("#errorLogin").html("<p style='color:red;'>"+err.reason+"</p>");
-			  } else {
-			    // successful login!
-			    Router.go('loby');
-			  }
-			});
 	    }
+
 	});
 
 	Template.loby.events({
@@ -495,16 +454,22 @@ if(Meteor.isClient)
 	    	if(tipSobe == "All")
 	    	{
 	    		returnRooms = Rooms.find({gameStatus: "0"}).fetch();
+
+	    		var tmp = SaveRooms.find({player_ids: Meteor.userId()}).fetch();
+
+	    		for(var i = 0; i < tmp.length; i++)
+	    			returnRooms.push(tmp[i]);
+
 	    	}
 
 	    	else if(tipSobe == "Private")
 	    	{
-	    		returnRooms = Rooms.find({gameStatus: "0", roomType: true}).fetch();
+	    		returnRooms = SaveRooms.find({player_ids: Meteor.userId()}).fetch();
 	    	}
 
 	    	else
 	    	{
-	    		returnRooms = Rooms.find({gameStatus: "0", roomType: false}).fetch();
+	    		returnRooms = Rooms.find({gameStatus: "0"}).fetch();
 	    	}
 
 	    	//alert(returnRooms.length);
@@ -517,19 +482,25 @@ if(Meteor.isClient)
 		    	if(myDoc.roomType)
 	    		{
 	    			roomType_tmp = "Private";
+	    			$(".listaSoba").append("<a href ='#' class='roomclick'><div class='li-group-item'><li id='li."+myDoc._id+"' class='list-group-item imgClick'><img id='img."+myDoc._id+"' src ='"+myDoc.image+"'/></li><span class='room'>Room: </span><span class='name'>"+myDoc.name+"</span> <span class='players'>Players: </span><span class='prvideo'>"+myDoc.player_ids_now.length+"</span><span class='drugideo'>/</span><span class='trecideo'>"+myDoc.maxPlayer+"</span><span class='status'>Status:</span><span class='statusname'>"+roomType_tmp+"</span></div></a>");
 	    		}
 
 	    		else
 	    		{
 	    			roomType_tmp = "Public";
+	    			$(".listaSoba").append("<a href ='#' class='roomclick'><div class='li-group-item'><li id='li."+myDoc._id+"' class='list-group-item imgClick'><img id='img."+myDoc._id+"' src ='"+myDoc.image+"'/></li><span class='room'>Room: </span><span class='name'>"+myDoc.name+"</span> <span class='players'>Players: </span><span class='prvideo'>"+myDoc.player_ids.length+"</span><span class='drugideo'>/</span><span class='trecideo'>"+myDoc.maxPlayer+"</span><span class='status'>Status:</span><span class='statusname'>"+roomType_tmp+"</span></div></a>");
 	    		}
 
-	    		$(".listaSoba").append("<a href ='#' class='roomclick'><div class='li-group-item'><li class='list-group-item'><img src ='"+myDoc.image+"'/></li><span class='room'>Room: </span><span class='name'>"+myDoc.name+"</span> <span class='players'>Players: </span><span class='prvideo'>"+myDoc.player_ids.length+"</span><span class='drugideo'>/</span><span class='trecideo'>"+myDoc.maxPlayer+"</span><span class='status'>Status:</span><span class='statusname'>"+roomType_tmp+"</span></div></a>");
+	    		
 	    	});
 	    },
 
 	    'click .imgClick': function(event){
+
+	    	console.log("ASDASDASASDSA");
 	    	var id_element = event.target.id;
+
+	    	console.log(id_element);
 
 	    	var id_element_arr = id_element.split('.');
 
@@ -537,51 +508,73 @@ if(Meteor.isClient)
 
 	    	var room_tmp = Rooms.findOne({_id: id_rly});
 
-	    	var max_player = room_tmp.maxPlayer;
-
-	    	var trenutno_player = room_tmp.player_ids.length;
-
-	    	//Session.set("maxcounter",room_tmp.timeRound);
-
-	    	if( max_player == (trenutno_player + 1) )
+	    	if(room_tmp)
 	    	{
 
-	    		Rooms.update({_id: id_rly}, {$set: {gameStatus: "1"}});
-	    		Rooms.update({_id: id_rly}, {$addToSet: {player_ids: Meteor.userId()}});
-	    		Rooms.update({_id: id_rly}, {$push: {player_points: 0}});
+		    	var max_player = room_tmp.maxPlayer;
 
-	    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
+		    	var trenutno_player = room_tmp.player_ids.length;
 
-	    		Session.set("id_room",id_rly);
-		    	/*$(".createRoom").attr("action","/guess?id="+id_rly);
-		    	Router.go('guess', {query: 'q=s'});*/
+		    	//Session.set("maxcounter",room_tmp.timeRound);
 
-		    	window.location.href = "/guess/"+id_rly;
+		    	if( max_player == (trenutno_player + 1) )
+		    	{
 
-		    	//Router.go('guess', {query: 'id='+id_rly});
+		    		//Rooms.update({_id: id_rly}, {$set: {gameStatus: "1"}}); /* treba da se smesti na 1 ako hocemo autmomacki pocetak igre i da se doda da se i rec izabere prilikom ovoga */
+		    		Rooms.update({_id: id_rly}, {$addToSet: {player_ids: Meteor.userId()}});
+		    		Rooms.update({_id: id_rly}, {$push: {player_points: 0}});
 
-	    		/*Session.set("id_room",id_rly);
-	    		Router.go('guess');*/
-	    	}
+		    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
 
-	    	else if( max_player > trenutno_player)
-	    	{
-	    		Rooms.update({_id: id_rly}, {$addToSet: {player_ids: Meteor.userId()}});
-	    		Rooms.update({_id: id_rly}, {$push: {player_points: 0}});
+		    		Session.set("id_room",id_rly);
+			    	/*$(".createRoom").attr("action","/guess?id="+id_rly);
+			    	Router.go('guess', {query: 'q=s'});*/
 
-	    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
+			    	window.location.href = "/guess/"+id_rly;
 
-	    		Session.set("id_room",id_rly);
-		    	/*$(".createRoom").attr("action","/guess/"+id_rly);
-		    	Router.go('guess', {query: 'q=s'});*/
+			    	//Router.go('guess', {query: 'id='+id_rly});
 
-		    	//Router.go('guess', {query: 'id='+id_rly});
+		    		/*Session.set("id_room",id_rly);
+		    		Router.go('guess');*/
+		    	}
 
-		    	window.location.href = "/guess/"+id_rly;
+		    	else if( max_player > trenutno_player)
+		    	{
+		    		Rooms.update({_id: id_rly}, {$addToSet: {player_ids: Meteor.userId()}});
+		    		Rooms.update({_id: id_rly}, {$push: {player_points: 0}});
 
-	    		/*Session.set("id_room",id_rly);
-	    		Router.go('guess');*/
-	    	}
+		    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
+
+		    		Session.set("id_room",id_rly);
+			    	/*$(".createRoom").attr("action","/guess/"+id_rly);
+			    	Router.go('guess', {query: 'q=s'});*/
+
+			    	//Router.go('guess', {query: 'id='+id_rly});
+
+			    	window.location.href = "/guess/"+id_rly;
+
+		    		/*Session.set("id_room",id_rly);
+		    		Router.go('guess');*/
+		    	}
+		    }
+
+		    else
+		    {
+		    	console.log(id_rly);
+		    	var room_tmp = SaveRooms.findOne({_id: id_rly});
+
+		    	if(room_tmp)
+		    	{
+		    		SaveRooms.update({_id: id_rly}, {$addToSet: {player_ids_now: Meteor.userId()}});
+
+		    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
+
+		    		Session.set("id_room",id_rly);
+
+			    	window.location.href = "/guess/"+id_rly;
+
+			    }
+		    }
 	    }
 
 
@@ -704,7 +697,6 @@ if(Meteor.isClient)
 
 			if(allUsersInRoom)
 			{
-
 				for(var j = 0; j < allUsersInRoom.player_ids.length; j++)
 				{
 					var item = {};
@@ -713,10 +705,9 @@ if(Meteor.isClient)
 
 					if(usersInfo)
 					{
-
 						item["username"] = usersInfo.username;
 				        item["image"] = usersInfo.profile.avatar;
-				        item["points"] = 0;
+				        item["points"] = allUsersInRoom.player_points[j];
 
 				        jsonObj.push(item);
 				    }
@@ -727,6 +718,49 @@ if(Meteor.isClient)
 				//var dasdasasd = JSON.parse[string];
 
 				return jsonObj;
+			}
+
+			else
+			{
+				var allUsersInRoom = SaveRooms.findOne({_id: Session.get("id_room_url")});
+
+				i++;
+
+				if(allUsersInRoom)
+				{
+					if(allUsersInRoom.player_ids.length == allUsersInRoom.player_ids_now.length)
+				    {
+				    	if(allUsersInRoom.drawIdPlayer == Meteor.userId())
+				    	{
+				    		SaveRooms.update({_id: Session.get("id_room_url")}, {$set: {gameStatus: "2", player_ids_now: []}});
+					    	Rooms.insert(SaveRooms.findOne({_id: Session.get("id_room_url")}));
+					    	SaveRooms.remove({_id: Session.get("id_room_url")});
+					    }
+
+				    }
+
+					for(var j = 0; j < allUsersInRoom.player_ids_now.length; j++)
+					{
+						var item = {};
+
+						var usersInfo = Meteor.users.findOne({_id: allUsersInRoom.player_ids_now[j]});
+
+						if(usersInfo)
+						{
+							item["username"] = usersInfo.username;
+					        item["image"] = usersInfo.profile.avatar;
+					        item["points"] = allUsersInRoom.player_points[j];
+
+					        jsonObj.push(item);
+					    }
+
+						//string += {username: usersInfo.username, image: usersInfo.profile.avatar, points: allUsersInRoom.player_points[j]};
+
+					}
+					//var dasdasasd = JSON.parse[string];
+
+					return jsonObj;
+				}
 			}
 
 			return null;
@@ -932,6 +966,33 @@ if(Meteor.isClient)
 						return true;
 					}
 
+					else if(room_query.gameStatus == "-1")
+					{
+						if(Meteor.userId() == Session.get("drawIdPlayer"))
+						{
+							setTimeout(function(){
+								SaveRooms.insert(Rooms.findOne({_id: id_room_url}));
+								Meteor.call('updateusersPoints', his_room.player_points, his_room.player_ids, id_room_url_new ,function(err, response) {
+									console.log(response);
+									erase();
+									Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+								});
+							}, 1000);
+						}
+
+						else
+						{
+							//status u User da kazem da nije u sobu
+
+							Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+							//redirektujem igrace u loby
+							
+							Router.go('loby');
+						}
+						
+					}
+
 					else
 					{
 						console.log('vrati falseee');
@@ -997,6 +1058,33 @@ if(Meteor.isClient)
 						return true;
 					}
 
+					else if(room_query.gameStatus == "-1")
+					{
+						if(Meteor.userId() == Session.get("drawIdPlayer"))
+						{
+							setTimeout(function(){
+								SaveRooms.insert(Rooms.findOne({_id: id_room_url}));
+								Meteor.call('updateusersPoints', his_room.player_points, his_room.player_ids, id_room_url_new ,function(err, response) {
+									console.log(response);
+									erase();
+									Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+								});
+							}, 1000);
+						}
+
+						else
+						{
+							//status u User da kazem da nije u sobu
+
+							Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+							//redirektujem igrace u loby
+							
+							Router.go('loby');
+						}
+						
+					}
+
 					else
 					{
 						console.log('vrati falseee');
@@ -1006,11 +1094,42 @@ if(Meteor.isClient)
 
 				else
 				{
-					if(room_query.gameStatus == "1")
+					if(room_query.gameStatus == "1"){
 						return true;
+					}
 
-					else
+					else if(room_query.gameStatus == "-1")
+					{
+						if(Meteor.userId() == Session.get("drawIdPlayer"))
+						{
+							setTimeout(function(){
+								SaveRooms.insert(Rooms.findOne({_id: id_room_url}));
+								Meteor.call('updateusersPoints', his_room.player_points, his_room.player_ids, id_room_url_new ,function(err, response) {
+									console.log(response);
+									erase();
+									Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+								});
+							}, 1000);
+						}
+
+						else
+						{
+							//status u User da kazem da nije u sobu
+
+							Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+							//redirektujem igrace u loby
+							
+							Router.go('loby');
+						}
+
 						return false;
+						
+					}
+
+					else{
+						return false;
+					}
 				}
 			}
 		},
@@ -1128,6 +1247,23 @@ if(Meteor.isClient)
 			
 
 			return keyWord;
+		},
+
+		canDeleteRoom: function(){
+			var his_room = Rooms.findOne({_id: id_room_url});
+
+			if(his_room)
+			{
+				if(his_room.player_ids.length == 1)
+				{
+					return true;
+				}
+
+				else
+				{
+					return false;
+				}
+			}
 		}
 		
 	});
@@ -1213,13 +1349,12 @@ if(Meteor.isClient)
     		if(his_room.numberRounds == his_room.currentRound + 1)
     		{
     			//brisem sve iz baze za tu sobu
-
-    			Meteor.call('updateusersPoints', array_tmp, his_room.player_ids, id_room_url_new ,function(err, response) {
-					console.log(response);
-				});
-
-
-    			
+    			setTimeout(function(){
+	    			Meteor.call('updateusersPoints', array_tmp, his_room.player_ids, id_room_url_new ,function(err, response) {
+						console.log(response);
+						erase();
+						Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+					});	}, 1000);
 
     			/*update poene u user acc */
     		}
@@ -1268,16 +1403,20 @@ if(Meteor.isClient)
 	    	}
     	}
 
-        erase();
-        if(his_room.numberRounds == his_room.currentRound + 1)
-		{
-			//status u User da kazem da nije u sobu
+    	else
+    	{
 
-			Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+	        erase();
+	        if(his_room.numberRounds == his_room.currentRound + 1)
+			{
+				//status u User da kazem da nije u sobu
 
-			//redirektujem igrace u loby
-			
-			Router.go('loby');
+				Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+				//redirektujem igrace u loby
+				
+				Router.go('loby');
+			}
 		}
 		
 	}
@@ -1306,6 +1445,32 @@ if(Meteor.isClient)
 			});
 
 
+		},
+
+		'click #deleteRoom': function(event){
+
+			var id_room_url_new = Session.get("id_room_url");
+			var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
+
+			Meteor.call('updateusersPoints', his_room.player_points, his_room.player_ids, id_room_url_new ,function(err, response) {
+				console.log(response);
+				erase();
+				Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+			});
+			/*Rooms.remove({_id: id_room_url}); 
+			Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}}); 
+			Router.go('loby');*/
+		},
+
+		'click #saveGame': function(event){
+			SaveRooms.remove({_id: id_room_url});
+			
+
+			
+
+			Rooms.update({_id: id_room_url}, {$set: {"gameStatus": "-1", "roomType": true } } );
+
+			
 		},
 
 		'click #closeMyModal': function(event){
@@ -1341,7 +1506,19 @@ if(Meteor.isClient)
 					}
 				}
 
-				var pomocni_niz = his_room.player_points.splice(index, 1);
+				console.log("INDEX: " + index);
+
+				var tmp = his_room.player_points;
+
+				var pomocni_niz = tmp.splice(index, 1);
+
+				console.log(pomocni_niz);
+
+				var query = Meteor.users.findOne({_id: Meteor.userId()});
+
+				var ukupno = query.profile.points + his_room.player_points[index];
+
+				Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.points": ukupno}});
 
 				Rooms.update({ _id: id_room_url },{ $pull: { player_ids:  his_room.player_ids[index] } });
 				Rooms.update({ _id: id_room_url },{ $pullAll: { player_points: his_room.player_points } } );
@@ -1355,6 +1532,36 @@ if(Meteor.isClient)
 				//redirektujem igrace u loby
 				
 				Router.go('loby');
+			}
+
+			else
+			{
+				var his_room = SaveRooms.findOne({_id: id_room_url});
+
+				if(his_room)
+				{
+					var index;
+
+					for(var i = 0; i < his_room.player_ids_now.length; i++)
+					{
+						if(his_room.player_ids_now[i] == Meteor.userId())
+						{
+							index = i;
+							break;
+						}
+					}
+
+
+					Rooms.update({ _id: id_room_url },{ $pull: { player_ids:  his_room.player_ids_now[index] } });
+
+	    			//status u User da kazem da nije u sobu
+
+					Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+					//redirektujem igrace u loby
+					
+					Router.go('loby');
+				}
 			}
 		},
 

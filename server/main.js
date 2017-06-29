@@ -8,6 +8,7 @@ import '../imports/api/rooms.js';*/
 TopTen = new Mongo.Collection('top_10');
 Rooms = new Mongo.Collection('rooms');
 Words = new Mongo.Collection('words');
+SaveRooms = new Mongo.Collection('save_rooms');
 
 Meteor.startup(() => {
 

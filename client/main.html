@@ -277,7 +277,7 @@
 
       <div class="form-group">
         <select class="form-control" id="sel1">
-          <option>All</option>
+          <!--<option>All</option>-->
           <option>Public</option>
           <option>Private</option>
         </select>
@@ -413,6 +413,15 @@
           {{#unless isDrawUser}}
             <br/><br/><button type="button" class="btn btn-primary" id="leaveRoom">Leave</button>
           {{/unless}}
+
+          {{#if isDrawUser}}
+            <br/><br/><button type="button" class="btn btn-primary" id="saveGame">Save Game</button>
+          {{/if}}
+
+          {{#if canDeleteRoom}}
+            <br/><br/><button type="button" class="btn btn-primary" id="deleteRoom">Delete Game</button>
+          {{/if}}
+
        {{/unless}}
 
 
