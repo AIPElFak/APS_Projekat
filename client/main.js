@@ -17,6 +17,7 @@ const messages = new Mongo.Collection(null);
 import { ReactiveVar } from 'meteor/reactive-var';
 
 countdown = new ReactiveCountdown();
+
 var canvas, canvas1, ctx, flag = false,		
 	        prevX = 0,		
 	        currX = 0,		
@@ -47,9 +48,12 @@ Session.set("gameStatus", "");
 
 Session.set("numberRounds", 0); //nijedna runda nije odigrana
 
-var tipSobe = "Public";
-var returnRooms = Rooms.find({gameStatus: "0"});
+uradioFunkciju = false;
 
+
+returnRooms = new ReactiveVar(Rooms.find({gameStatus: "0"}));
+var tipSobe = "Public";
+console.log(returnRooms.get());
 
 var id_room;
 var id_rly_1;
@@ -57,11 +61,7 @@ var id_room_url;
 var currentUser;
 var currentRoom;
 var UserInformation;
-
-
-
 Meteor.startup(function () {
-
 
     sAlert.config({
         effect: '',
@@ -239,7 +239,6 @@ Router.route('/loby',{
 });
 
 	$("select.image-picker").imagepicker({});
-
 		
 			sendMessage = function(text) {
 				streamer.emit('message', {
@@ -265,7 +264,6 @@ Router.route('/loby',{
 				var messageBody = document.querySelector('#chatlog');
 				messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 			});
-			
 if(Meteor.isClient)
 {
 	/*Meteor.logout();
@@ -303,7 +301,7 @@ if(Meteor.isClient)
 					    // code goes here    
 					    if(error){
 					    	$("#errorRegister").html("<p style='color:red;'>"+error.reason+"</p>");
-					       
+					        console.log(error.reason); // Output error if registration fails
 					    }
 
 					    else
@@ -317,7 +315,7 @@ if(Meteor.isClient)
 
 	       	else
 	       	{
-	       		$("#errorRegister").html("<p style='color:red;'>Password does not match</p>");
+	       		$("#errorRegister").html("<p style='color:red;'>Password no match</p>");
 	       	}
 	    }
 	});
@@ -430,12 +428,12 @@ if(Meteor.isClient)
 
 					    	if(passwordRoom.length > 0)
 					    	{
-					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: true, drawIdPlayer: Meteor.userId(), currentWord: "", winPlayer: 0, currentRound: 0});
+					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: true, drawIdPlayer: Meteor.userId(), currentWord: "", winPlayer: 0, currentRound: 0, player_ids_now: []});
 					    	}
 
 					    	else
 					    	{
-					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: false, drawIdPlayer: Meteor.userId(), currentWord: "", winPlayer: 0, currentRound: 0});
+					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: false, drawIdPlayer: Meteor.userId(), currentWord: "", winPlayer: 0, currentRound: 0, player_ids_now: []});
 					    	}
 
 					    	Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
@@ -481,31 +479,42 @@ if(Meteor.isClient)
 
 	    	var tipSobe = $("#sel1").val();
 
+	    	$(".listaSoba").html("");
 
 	    	if(tipSobe == "All")
 	    	{
-	    		returnRooms = Rooms.find({gameStatus: "0"}).fetch();
+	    		/*returnRooms = Rooms.find({gameStatus: "0"}).fetch();
 
 	    		var tmp = SaveRooms.find({player_ids: Meteor.userId()}).fetch();
 
 	    		for(var i = 0; i < tmp.length; i++)
-	    			returnRooms.push(tmp[i]);
+	    			returnRooms.push(tmp[i]);*/
 
 	    	}
 
 	    	else if(tipSobe == "Private")
 	    	{
-	    		returnRooms = SaveRooms.find({player_ids: Meteor.userId()}).fetch();
+	    		//returnRooms = SaveRooms.find({player_ids: Meteor.userId()}).fetch();
+	    		//returnRooms = SaveRooms.find({player_ids: Meteor.userId()});
+
+	    		returnRooms.set(SaveRooms.find({player_ids: Meteor.userId()}));
 	    	}
 
 	    	else
 	    	{
-	    		returnRooms = Rooms.find({gameStatus: "0"}).fetch();
+	    		//returnRooms = Rooms.find({gameStatus: "0"}).fetch();
+	    		//returnRooms = Rooms.find({gameStatus: "0"});
+
+	    		returnRooms.set(Rooms.find({gameStatus: "0"}));
 	    	}
+
+	    	
+
+	    	console.log(returnRooms);
 
 	    	//alert(returnRooms.length);
 
-	    	$(".listaSoba").html("");
+	    	/*$(".listaSoba").html("");
 
 	    	returnRooms.forEach(function(myDoc) {
 	    		var roomType_tmp;
@@ -523,16 +532,15 @@ if(Meteor.isClient)
 	    		}
 
 	    		
-	    	});
+	    	});*/
 	    },
 
 	    'click .imgClick': function(event){
 
-	    	
-
+	    	console.log("ASDASDASASDSA");
 	    	var id_element = event.target.id;
 
-	    
+	    	console.log(id_element);
 
 	    	var id_element_arr = id_element.split('.');
 
@@ -592,7 +600,7 @@ if(Meteor.isClient)
 
 		    else
 		    {
-		  
+		    	console.log(id_rly);
 		    	var room_tmp = SaveRooms.findOne({_id: id_rly});
 
 		    	if(room_tmp)
@@ -645,7 +653,8 @@ if(Meteor.isClient)
 		},
 
 		rooms: function(){
-			return returnRooms
+			console.log("USAO");
+			return returnRooms.get();
 		},
 
 		id_room_rly: function(){
@@ -710,6 +719,7 @@ if(Meteor.isClient)
 
 	Template.guess.helpers({
 
+	
 		checkRoomName: function(name1, name2)
 				{
 					for(i=0; i < name1.length; i++)
@@ -726,7 +736,6 @@ if(Meteor.isClient)
 			var room = Rooms.findOne({_id: Session.get("id_room_url")});
 			return room.player_ids;
 		},
-
 		messages() {
 			return messages.find();
 		},
@@ -819,7 +828,7 @@ if(Meteor.isClient)
 
 				var query = Rooms.findOne({_id: Session.get("id_room_url")});
 
-	
+				console.log("NESTO"+ctx);
 
 				if(query)
 				{
@@ -829,7 +838,7 @@ if(Meteor.isClient)
 						erase();
 					}
 
-				
+					console.log("USAO");
 					var boja;
 					var canvas = document.getElementById('can');
 					var ctx = canvas.getContext("2d");
@@ -938,7 +947,6 @@ if(Meteor.isClient)
 		},
 
 		isDrawUser: function(){
-		
 			var room_query = Rooms.findOne({_id: id_room_url});
 
 			if(room_query)
@@ -1000,14 +1008,12 @@ if(Meteor.isClient)
 							    backdrop: 'static',
 							    keyboard: false
 							});
-						
 
-						
 							setTimeout( function(){ $('#closeMyModal').click(); FinishRound("-1"); }, 10000);
 
 
 						});
-					
+						console.log('vrati true');
 						return true;
 					}
 
@@ -1015,14 +1021,24 @@ if(Meteor.isClient)
 					{
 						if(Meteor.userId() == Session.get("drawIdPlayer"))
 						{
-							setTimeout(function(){
-								SaveRooms.insert(Rooms.findOne({_id: id_room_url}));
-								Meteor.call('updateusersPoints', his_room.player_points, his_room.player_ids, id_room_url_new ,function(err, response) {
-									
-									erase();
-									Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
-								});
-							}, 1000);
+							if(!uradioFunkciju)
+							{
+								uradioFunkciju = true;
+								console.log("USAP1");
+								setTimeout(function(){
+									Meteor.call('updateusersPointsNoDelete', room_query.player_points, room_query.player_ids, id_room_url ,function(err, response) {
+										console.log(response);
+
+										var tmp = Rooms.findOne({_id: id_room_url});
+										Rooms.remove({_id: id_room_url});
+										SaveRooms.insert(tmp);
+										erase();
+										Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+										Router.go('loby');
+									});
+								}, 1000);
+							}
 						}
 
 						else
@@ -1040,7 +1056,7 @@ if(Meteor.isClient)
 
 					else
 					{
-			
+						console.log('vrati falseee');
 						return false;
 					}
 				}
@@ -1081,8 +1097,6 @@ if(Meteor.isClient)
 					        $(".data-progress").attr("data-progress","0");
 
 					        $('#myModal').modal({
-
-
 							    backdrop: 'static',
 							    keyboard: false
 							});
@@ -1101,22 +1115,31 @@ if(Meteor.isClient)
 							}*/
 				    	
 						});
-				
+						console.log('vrati true');
 						return true;
 					}
 
 					else if(room_query.gameStatus == "-1")
 					{
+
 						if(Meteor.userId() == Session.get("drawIdPlayer"))
 						{
-							setTimeout(function(){
-								SaveRooms.insert(Rooms.findOne({_id: id_room_url}));
-								Meteor.call('updateusersPoints', his_room.player_points, his_room.player_ids, id_room_url_new ,function(err, response) {
-									
-									erase();
-									Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
-								});
-							}, 1000);
+							if(!uradioFunkciju)
+							{
+								uradioFunkciju = true;
+								console.log("USAP2");
+								setTimeout(function(){
+									Meteor.call('updateusersPointsNoDelete', room_query.player_points, room_query.player_ids, id_room_url ,function(err, response) {
+										var tmp = Rooms.findOne({_id: id_room_url});
+										Rooms.remove({_id: id_room_url});
+										SaveRooms.insert(tmp);
+										erase();
+										Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+										Router.go('loby');
+									});
+								}, 1000);
+							}
 						}
 
 						else
@@ -1134,7 +1157,7 @@ if(Meteor.isClient)
 
 					else
 					{
-				
+						console.log('vrati falseee');
 						return false;
 					}
 				}
@@ -1149,14 +1172,23 @@ if(Meteor.isClient)
 					{
 						if(Meteor.userId() == Session.get("drawIdPlayer"))
 						{
-							setTimeout(function(){
-								SaveRooms.insert(Rooms.findOne({_id: id_room_url}));
-								Meteor.call('updateusersPoints', his_room.player_points, his_room.player_ids, id_room_url_new ,function(err, response) {
-									
-									erase();
-									Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
-								});
-							}, 1000);
+							if(!uradioFunkciju)
+							{
+								uradioFunkciju = true;
+								console.log("USAP3");
+								setTimeout(function(){
+
+									Meteor.call('updateusersPointsNoDelete', room_query.player_points, room_query.player_ids, id_room_url ,function(err, response) {
+										var tmp = Rooms.findOne({_id: id_room_url});
+										Rooms.remove({_id: id_room_url});
+										SaveRooms.insert(tmp);
+										erase();
+										Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+										Router.go('loby');
+									});
+								}, 1000);
+							}
 						}
 
 						else
@@ -1206,7 +1238,6 @@ if(Meteor.isClient)
 					    keyboard: false
 					});
 
-				
 					setTimeout( function(){ $('#closeMyModal').click(); FinishRound("1"); }, 10000);
 				}
 			}
@@ -1349,13 +1380,13 @@ if(Meteor.isClient)
 	    		{
 	    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
 	    			{
-	    			
+	    				console.log("if");
 	    				array_tmp.push(his_room.player_points[i] + points_for_draw_player);
 	    			}
 
 	    			else if(player_win_id == his_room.player_ids[i])
 	    			{
-	    				
+	    				console.log("else if");
 	    				array_tmp.push(his_room.player_points[i] + points_for_win_player);
 	    			}
 
@@ -1388,31 +1419,23 @@ if(Meteor.isClient)
 	    				array_tmp.push(his_room.player_points[i] - points_for_other_plater);
 	    			}
 
-	    	
+	    			console.log(array_tmp);
 	    		}
 	    	}
 
-    	
+    		console.log(array_tmp);
 
     		if(his_room.numberRounds == his_room.currentRound + 1)
     		{
     			//brisem sve iz baze za tu sobu
-
-
-    			Meteor.call('updateusersPoints', array_tmp, his_room.player_ids, id_room_url_new ,function(err, response) {
-				
-				});
-
-
-    			
-
     			setTimeout(function(){
 	    			Meteor.call('updateusersPoints', array_tmp, his_room.player_ids, id_room_url_new ,function(err, response) {
-					
+						console.log(response);
 						erase();
 						Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
-					});	}, 1000);
 
+						Router.go('loby');
+					});	}, 1000);
 
     			/*update poene u user acc */
     		}
@@ -1483,7 +1506,7 @@ if(Meteor.isClient)
 		//checkValidateData();
 	    if(!this._rendered) {		
 	      this._rendered = true;		
-
+	      console.log('Template onLoad');
 	      //chat mozda ce trebati da se pomeri negde drugde ali to jos treba da se vidi
 	      //init();		
 	    }		
@@ -1494,7 +1517,7 @@ if(Meteor.isClient)
 		'click #start': function(event){
 
 			Meteor.call('startGame',Session.get("id_room_url") ,function(err, response) {
-			
+				console.log(response);
 				Session.set("drawIdPlayer",response);
 
 				//stavljam da ima pen u ruku da se ne bi desio bug
@@ -1511,9 +1534,11 @@ if(Meteor.isClient)
 			var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
 
 			Meteor.call('updateusersPoints', his_room.player_points, his_room.player_ids, id_room_url_new ,function(err, response) {
-			
+				console.log(response);
 				erase();
 				Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}});
+
+				Router.go('loby');
 			});
 			/*Rooms.remove({_id: id_room_url}); 
 			Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": false}}); 
@@ -1523,12 +1548,7 @@ if(Meteor.isClient)
 		'click #saveGame': function(event){
 			SaveRooms.remove({_id: id_room_url});
 			
-
-			
-
 			Rooms.update({_id: id_room_url}, {$set: {"gameStatus": "-1", "roomType": true } } );
-
-			
 		},
 
 		'click #closeMyModal': function(event){
@@ -1564,19 +1584,34 @@ if(Meteor.isClient)
 					}
 				}
 
-		
+				console.log("INDEX: " + index);
 
 				var tmp = his_room.player_points;
 
 				var pomocni_niz = tmp.splice(index, 1);
 
-	
+				console.log(pomocni_niz);
 
 				var query = Meteor.users.findOne({_id: Meteor.userId()});
 
 				var ukupno = query.profile.points + his_room.player_points[index];
 
 				Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.points": ukupno}});
+
+				var all_users = Meteor.users.find({}).fetch();
+
+				all_users.sort(function(a, b) {
+				  return b.profile.points - a.profile.points;
+				});
+
+				if(all_users.length > 10)
+					all_users.length = 10;
+
+				for(var i = 0; i < all_users.length; i++)
+				{
+					TopTen.remove({_id: all_users[i]._id});
+					TopTen.insert({_id: all_users[i]._id, mesto: i + 1, username: all_users[i].username, points: all_users[i].profile.points});
+				}
 
 				Rooms.update({ _id: id_room_url },{ $pull: { player_ids:  his_room.player_ids[index] } });
 				Rooms.update({ _id: id_room_url },{ $pullAll: { player_points: his_room.player_points } } );
@@ -1623,7 +1658,7 @@ if(Meteor.isClient)
 			}
 		},
 
-		'click #chatsend': function(event){
+			'click #chatsend': function(event){
 
 			var message = $('#sendMessageChat').val();
 
@@ -1638,8 +1673,7 @@ if(Meteor.isClient)
 				messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
 		},
-
-			'keypress #sendMessageChat': function(event){
+		'keypress #sendMessageChat': function(event){
 			var code = event.charCode || event.keyCode;
 		  	if(code == 13){
 		  		if($("#chatsend").length > 0)
@@ -1664,16 +1698,20 @@ if(Meteor.isClient)
 				if(rec == message_client)
 				{
 					//pogodjena rec, obavesti server
+					
 					$(".rowmessage-bubble").append("<p class='text-muted' style='color:green;'>Correct word!</p>");
 
 					Rooms.update({_id: id_room_url_new}, {$set: { "gameStatus": "3", "winPlayer": Meteor.userId() } } );
 
+					
+
+					console.log("POGODAK");
 				}
 
 				else
 				{
-					$(".rowmessage-bubble").append("<p class='text-muted' style='color:red;'>!Incorrect word!</p>");
-			
+								$(".rowmessage-bubble").append("<p class='text-muted' style='color:red;'>!Incorrect word!</p>");
+					console.log("NIJE");
 				}
 
 				$("#sendMessage").val("");
@@ -1681,7 +1719,7 @@ if(Meteor.isClient)
 
 			else
 			{
-			
+				console.log("prazno polje");
 			}
 		},
 
@@ -1767,19 +1805,21 @@ if(Meteor.isClient)
 
 	function checkValidateData()
 	{
-		/*
+		/*console.log(template_screen);
 		if( template_screen == "guess" )
 		{*/
-		
+			console.log("checkValidateData");
 			//ispitujem da li je igrac u nekoj sobi
 			var currentUser = Meteor.userId();
 			var is_in_room = Meteor.users.findOne({_id: Meteor.userId()});
 			//var is_in_room = Meteor.users.findOne({_id: currentUser});
 
+			console.log(is_in_room);
+			console.log(is_in_room.profile.in_game);
 
 			if(is_in_room && is_in_room.profile.in_game)
 			{
-		
+				console.log("usao if");
 				//ako jeste ispitujem da li je on u toj sobi
 				var his_room = Rooms.findOne({_id: id_room_url, player_ids: currentUser});
 
@@ -1803,7 +1843,7 @@ if(Meteor.isClient)
 
 			else
 			{
-		
+				console.log("usao else");
 				//ako igrac nije u ovoj sobi, ispitujem da li je igra pocela
 
 				var his_room = Rooms.findOne({_id: id_room_url});
@@ -1828,7 +1868,7 @@ if(Meteor.isClient)
 						else
 						{
 							//ima sifra moramo da mu izbacim polje da unese
-							alert("Enter your password!!!");
+							alert("MORA UNESES SIFRU DECKO!!!");
 						}
 					}
 
@@ -1836,14 +1876,14 @@ if(Meteor.isClient)
 					{
 						//max igraca je u sobi
 						Router.go('loby');
-				
+						console.log("max");
 					}
 				}
 
 				else
 				{
 					//igra je pocela
-				
+					console.log("pocela igra");
 					Router.go('loby');
 				}
 			}
@@ -1864,7 +1904,7 @@ if(Meteor.isClient)
 			
 	        position =  canvas1.offset();		
 
-
+	        console.log("DRAW:"+Session.get("drawIdPlayer"));
 			
 	    	if(Meteor.userId() == Session.get("drawIdPlayer"))
 	    	{	
@@ -2074,7 +2114,7 @@ if(Meteor.isClient)
 
 crtanje = function(maxcounter, firstquad, secnd, thirdquad){
 
-	
+	console.log(firstquad + " _> " + secnd + " _> " + thirdquad);
 
 	var progressbar = document.querySelector('div[data-progress]'),
 	quad1 = document.querySelector('.quad1'),
