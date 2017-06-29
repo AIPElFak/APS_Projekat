@@ -47,7 +47,7 @@ Na osnovu navedenih nefunkcionalnih zahteva (odnosno atributa kvaliteta) i ogran
 * *Pouzdanost* - Aplikacija ne sme da prikaže netačne rezultate izvršenja algoritama. Takođe ne sme doći do gubljenja poruka koje se razmenjuju između korisnika i servera.
 * *Lakoća testiranja* - Komponente sistema treba projektovati tako da je njihovo testiranje lako, odnosno komponente treba da su u slaboj međusobnoj sprezi.
 * *Lakoća korišćenja* - Korisnički interfejs treba da bude jednostavan i lak za korišćenje. Korisnik treba inuitivno da zna koji alat čemu služi..
-* *Performanse* - Odziv aplikacije pri normalnim uslovima korišćenja (do 15 čvorova u grafu) ne sme da bude veći od 3 sekunde.
+* *Performanse* - Odziv aplikacije pri normalnim uslovima korišćenja ne sme da bude veći od 3 sekunde.
 * *Emocionalni faktori* - Aplikacija treba da ostavi jak emotivni utisak zabave i euforije kod korisnika kako bi što više igrao.
 * *Podrška za raličite internet pregledače* - Rad u aplikaciji treba da je moguć korišćenjem bilo kog internet pregledača (Google Chrome, Mozilla Firefox, Microsoft Edge, itd) u njihovim najnovijim verzijama.
 * *Lako održavanje* - Komponente sistema treba da imaju jednostavna i lako razumljiva imena koja opisuju njihovu svrhu u cilju lakšeg održavanja koda u budućnosti i lakog integrisanja novih članova tima u ceo proces.
