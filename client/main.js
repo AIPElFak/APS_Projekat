@@ -81,8 +81,8 @@ Meteor.startup(function () {
         // }
     });
 
-/*
-    Words.insert({ _id: "0", word:"ghost" });
+
+   /* Words.insert({ _id: "0", word:"ghost" });
 	Words.insert({ _id: "1", word:"kite" });
 	Words.insert({ _id: "2", word:"dog" });
 	Words.insert({ _id: "3", word:"egg" });
@@ -437,12 +437,12 @@ if(Meteor.isClient)
 
 					    	if(passwordRoom.length > 0)
 					    	{
-					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: true, drawIdPlayer: Meteor.userId(), currentWord: "" });
+					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: true, drawIdPlayer: Meteor.userId(), currentWord: "", winPlayer: 0, currentRound: 0});
 					    	}
 
 					    	else
 					    	{
-					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: false, drawIdPlayer: Meteor.userId(), currentWord: "" });
+					    		id_rly_1 = Rooms.insert({ name: roomName, image: roomImage, maxPlayer: maxPlayer, numberRounds: numberRounds, timeRound: timeRound, passwordRoom: passwordRoom, player_ids: [Meteor.userId()], pointsArray: [], player_points: [0], gameStatus: "0", roomType: false, drawIdPlayer: Meteor.userId(), currentWord: "", winPlayer: 0, currentRound: 0});
 					    	}
 
 					    	Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
@@ -545,7 +545,7 @@ if(Meteor.isClient)
 
 	    		Rooms.update({_id: id_rly}, {$set: {gameStatus: "1"}});
 	    		Rooms.update({_id: id_rly}, {$addToSet: {player_ids: Meteor.userId()}});
-	    		Rooms.update({_id: id_rly}, {$push: {player_points: [0]}});
+	    		Rooms.update({_id: id_rly}, {$push: {player_points: 0}});
 
 	    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
 
@@ -564,7 +564,7 @@ if(Meteor.isClient)
 	    	else if( max_player > trenutno_player)
 	    	{
 	    		Rooms.update({_id: id_rly}, {$addToSet: {player_ids: Meteor.userId()}});
-	    		Rooms.update({_id: id_rly}, {$push: {player_points: [0]}});
+	    		Rooms.update({_id: id_rly}, {$push: {player_points: 0}});
 
 	    		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.in_game": true}});
 
@@ -699,8 +699,6 @@ if(Meteor.isClient)
 
 			i++;
 
-			console.log("AHA: " + allUsersInRoom);
-
 			if(allUsersInRoom)
 			{
 
@@ -802,9 +800,16 @@ if(Meteor.isClient)
 			if(Meteor.userId() == Session.get("drawIdPlayer"))
 			{
 				var id_room_url_new = Session.get("id_room_url");
-				var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
-				//keyWord = Session.get("word");
-				keyWord = his_room.currentWord;
+
+				if(id_room_url_new)
+				{
+					var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
+					if(his_room)
+					{
+						//keyWord = Session.get("word");
+						keyWord = his_room.currentWord;
+					}
+				}
 			}
 
 			return keyWord;
@@ -815,7 +820,8 @@ if(Meteor.isClient)
 
 			var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
 
-			Session.set("drawIdPlayer",his_room.drawIdPlayer);
+			if(his_room)
+				Session.set("drawIdPlayer",his_room.drawIdPlayer);
 
 			return his_room.drawIdPlayer;
 		},
@@ -887,53 +893,7 @@ if(Meteor.isClient)
 
 						countdown.start(function() {
 
-							Session.set("numberRounds", Session.get("numberRounds") + 1);
-
-							var id_room_url_new = Session.get("id_room_url");
-					    	var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
-
-				    		clearInterval();
-				    		if(Meteor.userId() == Session.get("drawIdPlayer"))
-				    		{
-
-				    			$("#can").off();
-
-					    	
-					    		if(his_room.numberRounds == Session.get("numberRounds"))
-					    		{
-					    			//brisem sve iz baze za tu sobu
-
-					    			Rooms.remove({_id: id_room_url_new});
-					    		}
-
-					    		else
-					    		{
-
-						    		var index_next_player = 0;
-
-						    		for(var i = 0; i < his_room.player_ids.length; i++)
-						    		{
-						    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
-						    			{
-						    				index_next_player = i + 1;
-
-						    				if(index_next_player == his_room.player_ids.length)
-						    				{
-						    					index_next_player = 0;
-						    				}
-
-						    				break;
-						    			}
-						    		}
-
-						    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[index_next_player] } } );
-						    		arrya_points_draw = [];
-						    		//Rooms.update({_id: id_room_url_new}, {"pointsArray": [] } );
-						    		Session.set("drawIdPlayer",his_room.player_ids[index_next_player]);
-						    	}
-					    	}
-
-					        erase();
+					        //erase();
 
 					        $(".data-progress").removeAttr("style");
 
@@ -944,7 +904,14 @@ if(Meteor.isClient)
 
 					        $(".data-progress").attr("data-progress","0");
 
-					        if(his_room.numberRounds == Session.get("numberRounds"))
+							$('#myModal').modal({
+							    backdrop: 'static',
+							    keyboard: false
+							});
+
+							setTimeout( function(){ $('#closeMyModal').click(); FinishRound("-1"); }, 10000);
+
+					        /*if(his_room.numberRounds == Session.get("numberRounds"))
 							{
 								//status u User da kazem da nije u sobu
 
@@ -953,7 +920,7 @@ if(Meteor.isClient)
 								//redirektujem igrace u loby
 								
 								Router.go('loby');
-							}
+							}*/
 
 						});
 						console.log('vrati true');
@@ -991,7 +958,7 @@ if(Meteor.isClient)
 						countdown.start(function() {
 							
 							//kada istekne vreme sta se radi
-							Session.set("numberRounds", Session.get("numberRounds") + 1);
+							/*Session.set("numberRounds", Session.get("numberRounds") + 1);
 
 				    		clearInterval();
 
@@ -1002,6 +969,33 @@ if(Meteor.isClient)
 				    		if(Meteor.userId() == Session.get("drawIdPlayer"))
 				    		{
 				    			$("#can").off();
+
+				    			var time_all = his_room.timeRound;
+
+				    			var points_for_draw_player = Math.round(time_all * 0.2);
+
+				    			var points_for_other_plater = Math.round(time_all * 0.1);
+
+				    			var array_tmp = [];
+
+				    			for(var i = 0; i < his_room.player_ids.length; i++)
+					    		{
+					    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
+					    			{
+					    				array_tmp.push(his_room.player_points[i] - points_for_draw_player);
+					    			}
+
+					    			else
+					    			{
+					    				array_tmp.push(his_room.player_points[i] - points_for_other_plater);
+					    			}
+
+					    			console.log(array_tmp[i]);
+					    		}
+
+					    		Rooms.update({ _id: id_room_url_new },{ $pullAll: { player_points: his_room.player_points } } );
+
+					    		Rooms.update({ _id: id_room_url_new },{ $pushAll: { player_points: array_tmp } } );
 
 				    			if(his_room.numberRounds == Session.get("numberRounds"))
 					    		{
@@ -1035,9 +1029,9 @@ if(Meteor.isClient)
 						    		Session.set("drawIdPlayer",his_room.player_ids[index_next_player]);
 						    	}
 					    		
-					    	}
+					    	}*/
 
-					        erase();
+					        //erase();
 
 					        $(".data-progress").removeAttr("style");
 
@@ -1048,7 +1042,14 @@ if(Meteor.isClient)
 
 					        $(".data-progress").attr("data-progress","0");
 
-					        if(his_room.numberRounds == Session.get("numberRounds"))
+					        $('#myModal').modal({
+							    backdrop: 'static',
+							    keyboard: false
+							});
+
+							setTimeout( function(){ $('#closeMyModal').click(); FinishRound("-1"); }, 10000);
+
+					        /*if(his_room.numberRounds == Session.get("numberRounds"))
 							{
 								//status u User da kazem da nije u sobu
 
@@ -1057,7 +1058,7 @@ if(Meteor.isClient)
 								//redirektujem igrace u loby
 								
 								Router.go('loby');
-							}
+							}*/
 				    	
 						});
 						console.log('vrati true');
@@ -1107,14 +1108,99 @@ if(Meteor.isClient)
 					    keyboard: false
 					});
 
-					setTimeout( function(){ $('#closeMyModal').click(); FinishRound(); }, 10000);
+					setTimeout( function(){ $('#closeMyModal').click(); FinishRound("1"); }, 10000);
 				}
 			}
+		},
+
+		returnTypeScreen: function () {
+			var room_query = Rooms.findOne({_id: id_room_url});
+
+			if(room_query)
+			{
+				if(room_query.gameStatus == "3")
+				{
+					//znaci da je pogodjena rec
+					return true;
+				}
+
+				else
+				{
+					//znacid a je vreme isteklo i da rec nije pogodjena
+					return false;
+				}
+			}
+		},
+
+		returnWinPlayer: function(){
+			var room_query = Rooms.findOne({_id: id_room_url});
+
+			if(room_query)
+			{
+				id_player_won = room_query.winPlayer;
+
+				var query = Meteor.users.findOne({_id: id_player_won});
+
+				return query.username;
+				
+			}
+		},
+
+		returnNumberOfRounds: function(){
+			var room_query = Rooms.findOne({_id: id_room_url});
+
+			if(room_query)
+			{
+				return room_query.numberRounds;
+			}
+		},
+
+		retunrNumberOfCurrentround: function(){
+			var room_query = Rooms.findOne({_id: id_room_url});
+
+			if(room_query)
+			{
+				return room_query.currentRound + 1;
+			}
+		},
+
+		retunrIsLastroundFinish: function(){
+			var room_query = Rooms.findOne({_id: id_room_url});
+
+			if(room_query)
+			{
+				if(room_query.numberRounds == room_query.currentRound + 1)
+				{
+					return true;
+				}
+
+				else
+				{
+					return false;
+				}
+			}
+		},
+
+		keyWord_all_see: function(){
+
+			var keyWord = "";
+
+
+			var his_room = Rooms.findOne({_id: id_room_url});
+
+			if(his_room)
+			{
+				//keyWord = Session.get("word");
+				keyWord = his_room.currentWord;
+			}
+			
+
+			return keyWord;
 		}
 		
 	});
 
-	function FinishRound()
+	function FinishRound(type)
 	{
 		Session.set("numberRounds", Session.get("numberRounds") + 1);
 
@@ -1126,44 +1212,132 @@ if(Meteor.isClient)
 			/*MOZE DA SE PROSLEDJUJE STATUS U FUNKCIJU I U ZAVISNOSTI OD TOGA DA SE DODAJU ILI BRISU POENI*/
 			$("#can").off();
 
+			var array_tmp = [];
 
+			if(type == "1")
+			{
 
-    		if(his_room.numberRounds == Session.get("numberRounds"))
+				var player_win_id = his_room.winPlayer;
+
+				//var time_all = his_room.timeRound;
+
+				var time_rest = countdown.get();
+
+				//var sub_time = time_all - time_rest;
+
+				var points_for_draw_player = Math.round(time_rest * 0.2);
+
+				var points_for_win_player = Math.round(time_rest * 1);
+
+				for(var i = 0; i < his_room.player_ids.length; i++)
+	    		{
+	    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
+	    			{
+	    				console.log("if");
+	    				array_tmp.push(his_room.player_points[i] + points_for_draw_player);
+	    			}
+
+	    			else if(player_win_id == his_room.player_ids[i])
+	    			{
+	    				console.log("else if");
+	    				array_tmp.push(his_room.player_points[i] + points_for_win_player);
+	    			}
+
+	    			else
+	    			{
+	    				array_tmp.push(his_room.player_points[i]);
+	    			}
+	    		}
+	    	}
+
+	    	else if(type == "-1")
+	    	{
+	    		var time_all = his_room.timeRound;
+
+    			var points_for_draw_player = Math.round(time_all * 0.2);
+
+    			var points_for_other_plater = Math.round(time_all * 0.1);
+
+    			
+
+    			for(var i = 0; i < his_room.player_ids.length; i++)
+	    		{
+	    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
+	    			{
+	    				array_tmp.push(his_room.player_points[i] - points_for_draw_player);
+	    			}
+
+	    			else
+	    			{
+	    				array_tmp.push(his_room.player_points[i] - points_for_other_plater);
+	    			}
+
+	    			console.log(array_tmp);
+	    		}
+	    	}
+
+    		console.log(array_tmp);
+
+    		if(his_room.numberRounds == his_room.currentRound + 1)
     		{
     			//brisem sve iz baze za tu sobu
 
-    			Rooms.remove({_id: id_room_url_new});
+    			Meteor.call('updateusersPoints', array_tmp, his_room.player_ids ,function(err, response) {
+					console.log(response);
+				});
+
+
+    			
+
+    			/*update poene u user acc */
     		}
 
     		else
     		{
 
-	    		var index_next_player = 0;
+    			var currentRound_tmp = his_room.currentRound + 1;
 
-	    		for(var i = 0; i < his_room.player_ids.length; i++)
-	    		{
-	    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
-	    			{
-	    				index_next_player = i + 1;
+    			if(type == "-1")
+    			{
+		    		var index_next_player = 0;
 
-	    				if(index_next_player == his_room.player_ids.length)
-	    				{
-	    					index_next_player = 0;
-	    				}
+		    		for(var i = 0; i < his_room.player_ids.length; i++)
+		    		{
+		    			if(Session.get("drawIdPlayer") == his_room.player_ids[i])
+		    			{
+		    				index_next_player = i + 1;
 
-	    				break;
-	    			}
-	    		}
+		    				if(index_next_player == his_room.player_ids.length)
+		    				{
+		    					index_next_player = 0;
+		    				}
 
-	    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[index_next_player] } } );
+		    				break;
+		    			}
+		    		}
+
+		    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[index_next_player], "currentRound": currentRound_tmp } } );
+		    	}
+
+		    	else if(type == "1")
+		    	{
+		    		Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.winPlayer, "currentRound": currentRound_tmp } } );
+		    	}
+
+	    		//Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "2", "pointsArray": [], "drawIdPlayer": his_room.player_ids[index_next_player], "currentRound": currentRound_tmp } } );
 	    		arrya_points_draw = [];
+
+	    		/*update poene */
+	    		Rooms.update({ _id: id_room_url_new },{ $pullAll: { player_points: his_room.player_points } } );
+
+    			Rooms.update({ _id: id_room_url_new },{ $pushAll: { player_points: array_tmp } } );
+
 	    		Session.set("drawIdPlayer",his_room.player_ids[index_next_player]);
 	    	}
     	}
 
         erase();
-
-        if(his_room.numberRounds == Session.get("numberRounds"))
+        if(his_room.numberRounds == his_room.currentRound + 1)
 		{
 			//status u User da kazem da nije u sobu
 
@@ -1203,7 +1377,11 @@ if(Meteor.isClient)
 		},
 
 		'click #closeMyModal': function(event){
-			$("#closeMyModal").modal('hide');
+			event.preventDefault();
+
+			$('#closeMyModal').modal('hide');
+			$('body').removeClass('modal-open');
+			$('.modal-backdrop').remove();
 		},
 
 		'click #chatsend': function(event){
@@ -1256,7 +1434,9 @@ if(Meteor.isClient)
 					//pogodjena rec, obavesti server
 					$(".rowmessage-bubble").append("<p class='text-muted'>****** Pogodjena rec ******</p>");
 
-					Rooms.update({_id: id_room_url_new}, {$set: { "gameStatus": "3" } } );
+					Rooms.update({_id: id_room_url_new}, {$set: { "gameStatus": "3", "winPlayer": Meteor.userId() } } );
+
+					
 
 					console.log("POGODAK");
 				}

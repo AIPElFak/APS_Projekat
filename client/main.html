@@ -263,7 +263,7 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="closeModal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal">Close</button>
               </div>
             </div>
 
@@ -364,16 +364,31 @@
           <div class="modal-content">
             <div class="modal-header">
             <div class="test">
-                <h4 class="modal-title">Informations about the game:</h4>
+                <h4 class="modal-title">Informations about the game - Round: {{retunrNumberOfCurrentround}} / {{returnNumberOfRounds}}</h4>
                 </div>
             </div>
             <div class="modal-body">
-              <h3>List of all players and their points</h3>
-              <h3>Last Word:</h3>
-              <h3>Guessed it</h3>
+              {{#if retunrIsLastroundFinish}}
+                <div class="krajIgre">
+                  <h1> IGRA JE ZAVRSENA! </h1>
+                </div>
+              {{/if}}
+
+
+              {{#if returnTypeScreen}}
+                
+                <div class="wonScreen">
+                  <h1> Rec {{keyWord_all_see}} je pogodjena: pogodio je igrac: {{returnWinPlayer}} </h1>
+                </div>  
+
+              {{else}}
+                <div class="loseScreen">
+                  <h1> Rec {{keyWord_all_see}} nije pogodjena</h1>
+                </div>
+              {{/if}}
             </div>
             <div class="modal-footer">
-               <button type="button" class="btn btn-default" id="closeMyModal">Close</button>
+               <button type="button" class="btn btn-default" id="closeMyModal" data-dismiss="modal" style="display: none;">Close</button>
             </div>
           </div>
         </div>
