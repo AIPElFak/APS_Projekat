@@ -4,10 +4,10 @@ U nastavku se nalazi kratak pregled projekta.
 
 
 ## Dokumentacija sadržaj:
-1. [Architecture requirements](Architecture/Architecture requirements.md)
+1. [Architecture requirements](Architecture/Architectural_requirements.md)
 2. [Database](Architecture/Database.md)
 3. [Behavioral](Architecture/Behavioral.md)
-4. [Architectural patterns.md](Architecture/Architectural patterns.md.md)
+4. [Architectural patterns.md](Architecture/Architectural_patterns.md.md)
 
 ## Članovi tima:
 14905 Nikola Stamenović</br>
