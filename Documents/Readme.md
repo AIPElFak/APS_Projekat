@@ -4,10 +4,10 @@ U nastavku se nalazi kratak pregled projekta.
 
 
 ## Dokumentacija sadržaj:
-1. [Database](Architecture/Database.md)
-2. [Behavioral](Architecture/Behavioral.md)
-3. [Architecture](Architecture/Architecture.md)
-
+1. [Architecture requirements](Architecture/Architecture requirements.md)
+2. [Database](Architecture/Database.md)
+3. [Behavioral](Architecture/Behavioral.md)
+4. [Architectural patterns.md](Architecture/Architectural patterns.md.md)
 
 ## Članovi tima:
 14905 Nikola Stamenović</br>
@@ -26,15 +26,6 @@ Crtač += preostaloVreme\*0.2;<br/>
 *Isteklo vreme:*<br/>
 Crtač -= ukupnoVreme\*0.2<br/>
 Ostali igrači -= ukupnoVreme\*0.1<br/>
-
-
-## Funkcionalnosti
-1. Snimanje partije uz mogućnost nastavka kada svi igrači budu bili u sobi.<br/>
-2. Podrška za istovremeni rad više klijenata na jednom dokumentu (partiji igre) pri čemu prvi korisnik (crtač) koji je napravio sobu može na početku da unosi izmene, a svi ostali mogu u realnom vremenu da prate izmene i učestvuju u igri. Na kraju runde, uloga crtača se prenosi na drugoga (na onog koji je pogodio reč ili na proizvoljno izabranog ako reč nije pogođena).<br/>
-3. Implementirana sinhronizacija dokumenta kod svih klijenata.<br/>
-4. Omogućiti istovremeni rad više igara istovremeno.<br/>
-5. Omogućiti adekvatnu vizuelizaciju veceg broja soba u lobiju pri čemu je moguće videti sve bitne informacije za sobu (ime sobe, broj igrača, maksimalni broj igrača).<br/>
-6.  Prilikom implementacija na odgovarajućim mestima iskoristiti barem 3 različita projektna obrasca.<br/>
 
 
 ## Tehnologije:
