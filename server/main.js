@@ -8,12 +8,10 @@ import '../imports/api/rooms.js';*/
 TopTen = new Mongo.Collection('top_10');
 Rooms = new Mongo.Collection('rooms');
 Words = new Mongo.Collection('words');
-
+const streamer = new Meteor.Streamer('chat');
 Meteor.startup(() => {
 
-	Words.remove({});
-
-	Words.insert({ _id: "0", word:"ghost" });
+	/*Words.insert({ _id: "0", word:"ghost" });
 	Words.insert({ _id: "1", word:"kite" });
 	Words.insert({ _id: "2", word:"dog" });
 	Words.insert({ _id: "3", word:"egg" });
@@ -52,7 +50,7 @@ Meteor.startup(() => {
 	Words.insert({ _id: "36", word:"eureka" });
 	Words.insert({ _id: "37", word:"archaeologist" });
 	Words.insert({ _id: "38", word:"observatory" });
-	Words.insert({ _id: "39", word:"Atlantis" });
+	Words.insert({ _id: "39", word:"Atlantis" });*/
 
 	ServiceConfiguration.configurations.upsert({
   	service: "facebook"
@@ -91,7 +89,8 @@ Meteor.startup(() => {
     });*/
 
 
-const streamer = new Meteor.Streamer('chat');
+
+		
 streamer.allowRead('all');
 streamer.allowWrite('all');
 
@@ -134,7 +133,7 @@ Meteor.users.allow({
 		
 	  },
 
-	  updateusersPoints: function(pointsArray, playerIdArray, id_room_url_new){
+	  updateusersPoints: function(pointsArray, playerIdArray){
 	  	for(var i = 0; i < playerIdArray.length; i++)
 		{
 			var query = Meteor.users.findOne({_id: playerIdArray[i]});
