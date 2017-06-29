@@ -154,7 +154,7 @@
               <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
-                  <div class="modal-header bg-primary">
+                  <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">User Settings</h4>
                   </div>
@@ -225,7 +225,7 @@
 
               <!-- Modal content-->
               <div class="modal-content">
-                <div class="modal-header bg-primary">
+                <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title">Create Game</h4>
                 </div>
@@ -256,7 +256,8 @@
                     <option value = "150">2:30</option>
                     <option value = "180">3:00</option>
                   </select>
-                  <input type ="hidden" name="password" class="form-control passwordRoom" placeholder="Leave blank for public room" pattern=".{6,15}" title="6 characters minimum, 15 characters maximum">
+                  <label>Password</label>
+                  <input type ="password" name="password" class="form-control passwordRoom" placeholder="Leave blank for public room" pattern=".{6,15}" title="6 characters minimum, 15 characters maximum">
                   <br>
                   <input type="button" value ="Create" class ="btn btn-primary createRoom">
                 </form>
@@ -278,7 +279,7 @@
         <select class="form-control" id="sel1">
           <!--<option>All</option>-->
           <option>Public</option>
-          <option>Saved</option>
+          <option>Private</option>
         </select>
       </div>
       <ul class="list-group listaSoba">
@@ -338,7 +339,7 @@
 <template name="topUser">
 
 	<tr>
-		<td class="top{{_id}}">{{_id}}</td>
+		<td class="top{{_id}}">{{mesto}}</td>
 		<td class="top{{_id}}"><i class="fa fa-trophy" id="top{{_id}}"></i> {{username}}</td>
 		<td class="top{{_id}}">{{points}}</td>
 	</tr>
@@ -361,32 +362,34 @@
       <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header bg-primary">
+            <div class="modal-header">
             <div class="test">
-                <h4 class="chat-title">Informations about the game - Round: {{retunrNumberOfCurrentround}} / {{returnNumberOfRounds}}</h4>
+                <h4 class="modal-title">Informations about the game - Round: {{retunrNumberOfCurrentround}} / {{returnNumberOfRounds}}</h4>
                 </div>
             </div>
             <div class="modal-body">
               {{#if retunrIsLastroundFinish}}
-                <div class="krajIgre" align="center">
-                  <h1 class="chat-title">Game Finished! </h1>
+                <div class="krajIgre">
+                  <h1> IGRA JE ZAVRSENA! </h1>
                 </div>
               {{/if}}
 
 
               {{#if returnTypeScreen}}
                 
-                <div class="wonScreen" align="center">
-                  <h1 class="chat-title"> Word {{keyWord_all_see}} guessed correctly by <span class ="username">{{returnWinPlayer}}</span> </h1>
+                <div class="wonScreen">
+                  <h1> Rec {{keyWord_all_see}} je pogodjena: pogodio je igrac: {{returnWinPlayer}} </h1>
                 </div>  
 
               {{else}}
-                <div class="loseScreen" align="center">
-                  <h1 class="chat-title"> Word {{keyWord_all_see}} was not guessed by anyone, try better next time.</h1>
+                <div class="loseScreen">
+                  <h1> Rec {{keyWord_all_see}} nije pogodjena</h1>
                 </div>
               {{/if}}
             </div>
-
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default" id="closeMyModal" data-dismiss="modal" style="display: none;">Close</button>
+            </div>
           </div>
         </div>
       </div>
@@ -411,7 +414,7 @@
             <br/><br/><button type="button" class="btn btn-primary" id="leaveRoom">Leave</button>
           {{/unless}}
 
-          {{#if isDrawUser}}
+          {{#if haveStartButton}}
             <br/><br/><button type="button" class="btn btn-primary" id="saveGame">Save Game</button>
           {{/if}}
 
@@ -453,9 +456,11 @@
           </div>
           
           <div class="infoguessu">
-           <p class ="word">{{keyWord}}</p>
+           <p class ="username">{{keyWord}}</p>
          </div>
-
+         <br>
+         <br>
+         <br>
          {{#if isDrawUser}}
            <div class="paleta">
             <a href="#" id="penblue"><img class="olovke" src = "/room/blue.png"/></a>
@@ -469,7 +474,6 @@
           <!-- SVE MOZES DA MENJAS SAMO NEMOJ DA MI MENJAS ID DUGMETA!!! -->
 
           {{#if isGameStarted}}
-          <br>
             <div class="bugmeZabrisanje">
               <button type="button" id="clearCanvas" class="btn btn-primary">Clear</button>
             </div>
@@ -509,7 +513,7 @@
     
     <div class="guess">
       <div class="panel panel-default">
-        <div class="panel-heading" ><span class="chat-title">Guess</span> <i class="fa fa-question" aria-hidden="true"></i> </div>
+        <div class="panel-heading">Guess</div>
         <div class="panel-body">
           <div class="log">
             <div class="rowmessage-bubble">
@@ -533,26 +537,21 @@
   </div>
 {{/if}}
 <div class="col-sm-10">
-<br><br>
  <div class="chat">
   <div class ="panel panel-default">
-    <div class="panel-heading"><i class="fa fa-comments" aria-hidden="true"></i> <span class="chat-title">Chat</span></div>
+    <div class="panel-heading">Chat</div>
     <div class="panel-body">
-      <div class="chatlog" id="chatlog">
+      <div class="chatlog">
         <div class="messages">
             {{#each messages}}
-               {{#if checkRoomName roomName name}}
               <div class="message-line {{type}}">
                 <div class="message">
-                <img class="img-circle" style="width: 20px; height: 20px; float: left;" src="{{img}}">
-              
                   {{#if user}}
-                    <span class="user1"> &nbsp;   {{user}} : </span>
+                    <b>{{user}} :</b>
                   {{/if}}
-                  <p class="txt">{{text}}</p>
+                  {{text}}
                 </div>
               </div>
-              {{/if}}
             {{/each}}
           </div>
       </div>
