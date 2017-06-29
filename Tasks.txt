@@ -3,6 +3,30 @@ Dokumentacija:
 -Bihevirialni UML
 -Modeli
 
+Bagovi:
+-Kada se briše, na strani onog koji nije crtač prikazuje se samo 1px da se briše, previše je usko
+-Prebacivanje svega na engleski
+-Prilikom iscrtavanja na strani koja gleda, početna i završna tačka boje su crne
+-Dugme clearAll za čišćenje celog canvas-a može da se doda
+-Password za sobu nismo rešili, da se doda neko prozorče koje pita za password ili da pustimo bez passa za sada jer gubimo funkcionalanost sa sobama
+-Izlazak iz sobe napraviti
+-Kasni iscrtavanje kada ima mnogo tačaka
+-Nije obrisao canvas kada je završio rundu, obrisano iz baze, ali nije canvas obrisan. Mislim da je razlog jer je i dalje iscrtavao tačke (mnogo sam ih crtao)
+-Refresh stranice počinje ispočetka vreme
+-Kad se odradi refresh, ne vidim koju reč treba da objašnjavam
+-Nakon refresha ne vidim start dugme (ni na jednom ekranu)
+-Duža reč za pogađanje štrči iz tabelice, prelazi desnu liniju onog pravougaonika
+-Kad je poslednje korišćena gumica kod player1, nakon što se promeni runda i kada počne crtač da crta, player1 ima podebljane linije iscrtane (nije vraćena debljina na 1)
+-Proces iscrtavanja ne prestaje kada se runda završi, čak se ugasi prozorče, nastavi se sa iscrtavanjem do kraja, i tek kad se završi se dobija start dugme
+-<b> Mora vreme da se prebaci na server, jer refrešovanjem svih igrača, runda može beskonačno da traje<b/>
+-Refresh između runde otpočinje tajmer. A refresh ubija ko ima dugme za start, iako je guess dobro odrađen
+-Chat kada pošalje poruku neko nekad dobije dve iste poruke, nekad tri, nekad četri. Testirano za 3 igrača.
+-Kada se dobije poruka na četu da se skroluje odma dole kako bi se videla poruke, takođe, enter ne radi
+-Kada se smanji rezolucija prozora, loše se uzimaju koordinate za crtanje
+-Treći igrač ima NaN vrednost za broj poena
+
+
+
 
 Projekat:
 
