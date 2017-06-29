@@ -1,6 +1,6 @@
 # Arhitekturni zahtevi aplikacije Sketcher
 
-U ovom dokumentu je dat pregled funkcionalnosti, arhitekturnih i nefunkcionalnih zahteva za aplikaciju Sketecher.
+U ovom dokumentu je dat pregled funkcionalnosti, arhitekturnih i nefunkcionalnih zahteva za aplikaciju Sketcher.
 
 ## Funkcionalnosti
 
