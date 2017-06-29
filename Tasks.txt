@@ -1,9 +1,3 @@
-Dokumentacija:
--Bihevirialni UML
--Modeli ?
--Paterni
-
-
 Bagovi:
 -Kada se briše, na strani onog koji nije crtač prikazuje se samo 1px da se briše, previše je usko
 -Prilikom iscrtavanja na strani koja gleda, početna i završna tačka boje su crne
@@ -20,6 +14,3 @@ Bagovi:
 
 NA KRAJU POBRISATI PAKETE KOJE NE KORISTIMO!
 autopublish bi takođe trebalo da obrišemo, jer celu bazu stavlja na videlo klijentu, što nije dobro niti pametno
-
-Funkcionalnosti:
-<b> Snimanje sobe! <b/>
