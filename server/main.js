@@ -8,7 +8,12 @@ import '../imports/api/rooms.js';*/
 TopTen = new Mongo.Collection('top_10');
 Rooms = new Mongo.Collection('rooms');
 Words = new Mongo.Collection('words');
+
 const streamer = new Meteor.Streamer('chat');
+
+SaveRooms = new Mongo.Collection('save_rooms');
+
+
 Meteor.startup(() => {
 
 	/*Words.insert({ _id: "0", word:"ghost" });
