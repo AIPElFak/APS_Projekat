@@ -1672,7 +1672,7 @@ if(Meteor.isClient)
 
 				else
 				{
-					$(".rowmessage-bubble").append("<p class='text-muted' style='color:red;'>!ncorrect word!</p>");
+					$(".rowmessage-bubble").append("<p class='text-muted' style='color:red;'>!Incorrect word!</p>");
 			
 				}
 
