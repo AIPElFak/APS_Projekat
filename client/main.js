@@ -702,7 +702,7 @@ if(Meteor.isClient)
 			    			case 3:
 								ctx.strokeStyle = boja;
 			    				ctx.beginPath();
-			    				ctx.fillRect(query.pointsArray[++p],query.pointsArray[++p],2,2);							
+			    				//ctx.fillRect(query.pointsArray[++p],query.pointsArray[++p],2,2);							
 			    				ctx.closePath();
 			    			break;
 			    		}
