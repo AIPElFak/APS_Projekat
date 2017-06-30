@@ -13,21 +13,6 @@
     <div class ="container">
       <div class ="col-md-3 col-sm-2"></div>
       <div class ="col-md-6 col-sm-8 login">
-        <div class ="alt-auth">
-
-          <button class="facebookLogin" data-type="facebook">
-            <i class="fa fa-facebook"></i>
-          </button>
-
-          <button class="twitterLogin" data-type="twitter">
-           <i class="fa fa-twitter"></i>
-         </button>
-
-         <button class="googleLogin" data-type="google">
-          <i class="fa fa-google"></i>
-        </button>
-
-      </div>
 
       <form id ="login-form" class="loginForm">
         <label>Username or Email</label>
@@ -53,10 +38,6 @@
         Register
       </a>
       <br>
-      <a href="{{pathFor route='loby'}}" class="guest-button">
-        <i class="fa fa-rocket"></i>
-        Play as a Guest
-      </a>
     </div>
   </div>
 
@@ -66,20 +47,7 @@
   <div class ="container">
     <div class ="col-md-3 col-sm-2"></div>
     <div class ="col-md-6 col-sm-8 login">
-      <div class ="alt-auth">
-        <button data-type="facebook">
-          <i class="fa fa-facebook"></i>
-        </button>
-
-        <button data-type="twitter">
-          <i class="fa fa-twitter"></i>
-        </button>
-
-        <button data-type="google">
-          <i class="fa fa-google"></i>
-        </button>
-
-      </div>
+    
       <form id ="register-form" class="registerForm">
         <!--<label>Full Name</label>
         <input type ="text" name ="fullname" class="form-control">-->
@@ -256,7 +224,7 @@
                     <option value = "150">2:30</option>
                     <option value = "180">3:00</option>
                   </select>
-                  <input type ="hidd" name="password" class="form-control passwordRoom" placeholder="Leave blank for public room" pattern=".{6,15}" title="6 characters minimum, 15 characters maximum">
+                  <input type ="hidden" name="password" class="form-control passwordRoom" placeholder="Leave blank for public room" pattern=".{6,15}" title="6 characters minimum, 15 characters maximum">
                   <br>
                   <input type="button" value ="Create" class ="btn btn-primary createRoom">
                 </form>
@@ -325,11 +293,11 @@
     <span class="room">Room: </span>
     <span class="name">{{name}}</span> 
     <span class="players">Players: </span>
-    <span class="prvideo">{{player_ids.length}}</span>
+    <span class="prvideo">{{#if roomType}}{{player_ids_now.length}}{{else}}{{player_ids.length}}{{/if}}</span>
     <span class="drugideo">/</span>
     <span class="trecideo">{{maxPlayer}}</span>
     <span class="status">Status:</span>
-    <span class="statusname">{{#if roomType}}Private{{else}}Public{{/if}}</span>
+    <span class="statusname">{{#if roomType}}Saved{{else}}Public{{/if}}</span>
 
   </div>
 </div>
@@ -338,7 +306,7 @@
 <template name="topUser">
 
 	<tr>
-		<td class="top{{_id}}">{{_id}}</td>
+		<td class="top{{_id}}">{{mesto}}</td>
 		<td class="top{{_id}}"><i class="fa fa-trophy" id="top{{_id}}"></i> {{username}}</td>
 		<td class="top{{_id}}">{{points}}</td>
 	</tr>
@@ -386,7 +354,9 @@
                 </div>
               {{/if}}
             </div>
-
+			<div class="modal-footer">
+               <button type="button" class="btn btn-default" id="closeMyModal" data-dismiss="modal" style="display: none;">Close</button>
+            </div>
           </div>
         </div>
       </div>
@@ -411,7 +381,7 @@
             <br/><br/><button type="button" class="btn btn-primary" id="leaveRoom">Leave</button>
           {{/unless}}
 
-          {{#if isDrawUser}}
+          {{#if haveStartButton}}
             <br/><br/><button type="button" class="btn btn-primary" id="saveGame">Save Game</button>
           {{/if}}
 
@@ -570,37 +540,6 @@
 </div>
 </div>
 </template>
-
-<!-- 
-
-videti kako ovo ubacite a da ne glavi cetvrtu cetvrtinu
-<div class='counter'>{{getCountdown}}</div>
-
-
-
-    <div class="chat">
-      <div class ="panel panel-default">
-      <div class="panel-heading">Chat</div>
-      <div class="panel-body">
-      <div class="container">
-      <div class="row message-bubble">
-      <p class="text-muted">Jovan</p>
-      <span>Work?</span>
-      </div>
-      </div>
-      <div class="panel-footer">
-      <div class="input-group">
-      <input type="text" class="form-control" id="sendMessage" >
-      <span class="input-group-btn">
-      <button class="btn btn-default" id ="chatsend" type="button">Send</button>
-      </span>
-      </div>
-      </div>
-      </div>
-      </div>
-    </div>
-
-  -->
 
   
   <template name="playerInfoInRoom">    
