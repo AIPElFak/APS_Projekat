@@ -1,9 +1,0 @@
-STA JE OSTALO DA SE ODRADI:
-
--mozda prilikom refresh stranice, da napravimo da ako je igra u toku da se vreme dokle je stalo uzme sa servera
--proveriti ceo sajt i prebaciti sve reci na engleski (NA KRAJU)
-
-
-NAPOMENA:
-
--igru uvek startuje igrac koji treba da crta
