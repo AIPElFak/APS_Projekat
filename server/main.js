@@ -8,15 +8,13 @@ import '../imports/api/rooms.js';*/
 TopTen = new Mongo.Collection('top_10');
 Rooms = new Mongo.Collection('rooms');
 Words = new Mongo.Collection('words');
-
-const streamer = new Meteor.Streamer('chat');
-
 SaveRooms = new Mongo.Collection('save_rooms');
-
 
 Meteor.startup(() => {
 
-	/*Words.insert({ _id: "0", word:"ghost" });
+	Words.remove({});
+
+	Words.insert({ _id: "0", word:"ghost" });
 	Words.insert({ _id: "1", word:"kite" });
 	Words.insert({ _id: "2", word:"dog" });
 	Words.insert({ _id: "3", word:"egg" });
@@ -55,7 +53,7 @@ Meteor.startup(() => {
 	Words.insert({ _id: "36", word:"eureka" });
 	Words.insert({ _id: "37", word:"archaeologist" });
 	Words.insert({ _id: "38", word:"observatory" });
-	Words.insert({ _id: "39", word:"Atlantis" });*/
+	Words.insert({ _id: "39", word:"Atlantis" });
 
 	ServiceConfiguration.configurations.upsert({
   	service: "facebook"
@@ -94,8 +92,7 @@ Meteor.startup(() => {
     });*/
 
 
-
-		
+const streamer = new Meteor.Streamer('chat');
 streamer.allowRead('all');
 streamer.allowWrite('all');
 
@@ -121,8 +118,6 @@ Meteor.users.allow({
 	Meteor.methods({
 	  startGame: function (id_room_url_new) {
 
-			console.log('on server, startGame called');
-
 			var his_room = Rooms.findOne({_id: id_room_url_new, player_ids: Meteor.userId()});
 
 			var random_number_for_word = Math.floor((Math.random() * Words.find().count()));
@@ -132,13 +127,13 @@ Meteor.users.allow({
 			var word_string = Words.findOne({_id: random_number_for_word_string});
 
 			Rooms.update({_id: id_room_url_new}, {$set: {"gameStatus": "1", "currentWord": word_string.word}});
-			//Session.set("word",word_string.word);
 
 			return his_room.drawIdPlayer;
 		
 	  },
 
-	  updateusersPoints: function(pointsArray, playerIdArray){
+	  updateusersPoints: function(pointsArray, playerIdArray, id_room_url_new){
+
 	  	for(var i = 0; i < playerIdArray.length; i++)
 		{
 			var query = Meteor.users.findOne({_id: playerIdArray[i]});
@@ -148,10 +143,61 @@ Meteor.users.allow({
 			Meteor.users.update({_id: playerIdArray[i]}, {$set: {"profile.points": ukupno}});
 		}
 
+		TopTen.remove({});
+
+		var all_users = Meteor.users.find({}).fetch();
+
+		all_users.sort(function(a, b) {
+		  return b.profile.points - a.profile.points;
+		});
+
+		if(all_users.length > 10)
+			all_users.length = 10;
+
+		TopTen.remove({});
+
+		for(var i = 0; i < all_users.length; i++)
+		{
+			TopTen.insert({_id: all_users[i]._id, mesto: i + 1, username: all_users[i].username, points: all_users[i].profile.points});
+		}
+
 		Rooms.remove({_id: id_room_url_new});
 
 		return true;
+	  },
+
+	  updateusersPointsNoDelete: function(pointsArray, playerIdArray, id_room_url_new){
+
+	  	for(var i = 0; i < playerIdArray.length; i++)
+		{
+			var query = Meteor.users.findOne({_id: playerIdArray[i]});
+
+			var ukupno = query.profile.points + pointsArray[i];
+
+			Meteor.users.update({_id: playerIdArray[i]}, {$set: {"profile.points": ukupno}});
+
+			TopTen.remove({});
+
+			var all_users = Meteor.users.find({}).fetch();
+
+			all_users.sort(function(a, b) {
+			  return b.profile.points - a.profile.points;
+			});
+
+			if(all_users.length > 10)
+				all_users.length = 10;
+
+			TopTen.remove({});
+
+			for(var i = 0; i < all_users.length; i++)
+			{
+				TopTen.insert({_id: all_users[i]._id, mesto: i + 1, username: all_users[i].username, points: all_users[i].profile.points});
+			}
+		}
+
+		return true;
 	  }
+
 
 	});
 
