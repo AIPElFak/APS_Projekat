@@ -5,7 +5,7 @@ Meteor.js koristi MongoDB u pozadini. </br>
 U nastavku je pregled podataka koje čuvamo u bazi.
 
 
-## Rooms
+## Rooms && SaveRooms
 
 | No  | Ime promenljive | Objašnjenje    |
 | :---- | :--------------- |:---------------|
@@ -14,14 +14,16 @@ U nastavku je pregled podataka koje čuvamo u bazi.
 | 3   | image           | Avatar sobe       |
 | 4   | maxPlayer       |  Maksimalni broj igrača       |
 | 5   | timeRound       | Vreme trajanja runde       |
-| 6   | passwordRoom       | Password sobe |
-| 7   | player_ids       | Niz ID-eva igrača       |
-| 8   | player_points       | Niz broja poena igrača       |
-| 9   | roomType       | Da li je soba javna ili privatna       |
-| 10   | drawIdPlayer       | ID crtača       |
-| 11   | pointsArray       | Niz kodiranih tačaka        |
-| 12   | gameStatus       | 0: igra nije počela; 1: igra je počela; 2: Završila se partija        |
-| 13   | numberRounds       | Broj rundi       |
+| 6   | player_ids       | Niz ID-eva igrača       |
+| 7   | player_points       | Niz broja poena igrača       |
+| 8   | roomType       | Da li je soba javna ili snimljena       |
+| 9   | drawIdPlayer       | ID crtača       |
+| 10   | pointsArray       | Niz kodiranih tačaka        |
+| 11   | gameStatus       | 0: igra nije počela; 1: igra je počela; 2: Završila se partija        |
+| 12   | numberRounds       | Broj rundi       |
+| 13   | winPlayer       | ID igrača koji je pogodio pojam       |
+| 14   | currentRound       | Trenutna runda      |
+| 15   | player_ids_now        | Spisak igrača koji su dobijeni iz SaveRooms      |
 
 
 ## Users
@@ -31,7 +33,9 @@ U nastavku je pregled podataka koje čuvamo u bazi.
 | 1   | _id           | ID korisnika  |
 | 2   | profile.avatar           | Avatar       |
 | 3   | profile.in_game       |  Da li je igrač trenutno u igri       |
-
+| 4   | profile.points      |  Broj poena       |
+| 5   | username       | Korisničko ime       |
+| 6   | email       |  Korisnički E-mail      |
 
 ## Words
 
@@ -39,3 +43,12 @@ U nastavku je pregled podataka koje čuvamo u bazi.
 | :---- | :--------------- |:---------------|
 | 1   | _id           | ID reči od 0 do Broj reči  |
 | 2   | word           | Reč       |
+
+## TopTen
+
+| No  | Ime promenljive | Objašnjenje    |
+| :---- | :--------------- |:---------------|
+| 1   | _id           | ID |
+| 2   | mesto           | Redni broj u tabeli       |
+| 3   | username           | Korisničko ime       |
+| 4   | points           | Broj poena       |
